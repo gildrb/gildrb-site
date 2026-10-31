@@ -1,4 +1,4 @@
-import { builtProducts, origin, pages, productUrl, products, slugs } from "../src/site.ts";
+import { builtProducts, origin, pages, products, slugs } from "../src/site.ts";
 import {
   apiHeaders,
   canonicalHost,
@@ -18,16 +18,16 @@ const markdown = new Map([
 ]);
 
 /**
- * Most product pages live on their own hosts. On gildrb.com their old paths redirect there; the
- * products Worker (`worker/products.ts`) still reads them from the Pages deployment's own host.
- * A `Local` product's page is here; only its former slugs redirect.
+ * Product pages live on their own hosts. On gildrb.com their old paths (and those of their former
+ * slugs) redirect there; the products Worker (`worker/products.ts`) still reads them from the
+ * Pages deployment's own host.
  */
 const productHomes = new Map(
-  products.flatMap((product): [string, string][] =>
-    [...(product.site === "Local" ? [] : [product.slug]), ...product.formerSlugs].flatMap((slug) =>
-      [`/${slug}`, `/${slug}/`, `/${slug}.html`].map((path): [string, string] => [
+  products.flatMap(({ slug, formerSlugs, home }): [string, string][] =>
+    [slug, ...formerSlugs].flatMap((name) =>
+      [`/${name}`, `/${name}/`, `/${name}.html`].map((path): [string, string] => [
         path,
-        productUrl(product),
+        `${home}/`,
       ]),
     ),
   ),

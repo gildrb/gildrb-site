@@ -1,8 +1,7 @@
-// Product pages on their own hosts, and the install-only hosts of `Local` products; see
-// products.ts. Deploy: `npx wrangler deploy -c worker/wrangler.jsonc`.
+// Product pages on their own hosts; see products.ts. Deploy: `npx wrangler deploy -c worker/wrangler.jsonc`.
 // eukhe.com and www.eukhe.com belong to the eukhe-site Worker (repo gildrb/eukhe-site); this one
-// keeps eukhe.gildrb.com, which redirects there. porthmeus.com, www.porthmeus.com and the old
-// poros.gildrb.com serve the Porthmeus installer and redirect the rest to gildrb.com/porthmeus.
+// keeps eukhe.gildrb.com, which redirects there. www.porthmeus.com and the old poros.gildrb.com
+// redirect to porthmeus.com.
 {
   "name": "gildrb-products",
   "main": "products.ts",

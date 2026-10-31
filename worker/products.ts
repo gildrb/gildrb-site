@@ -1,56 +1,24 @@
-import { origin, type Product, productUrl, products } from "../src/site.ts";
+import { builtProducts, origin, type Product, products } from "../src/site.ts";
 
 /**
  * Serves each built product page on its own host (`Product.home`, `site: "Built"`). The pages are
  * built and deployed with gildrb.com; this Worker reads them from the Pages deployment's own host,
  * where gildrb.com's redirect of `/<slug>` (see `functions/[[path]].ts`) does not apply. Every
- * product's alias hosts redirect to its home, including those with a site of their own. A `Local`
- * product's hosts only install; everything else there redirects to its page on gildrb.com.
+ * product's alias hosts redirect to its home, including those with a site of their own.
  */
 const upstream = "https://web-2qb.pages.dev";
 
-type Site =
-  | { $: "Home"; product: Product }
-  | { $: "Install"; product: Product }
-  | { $: "Alias"; home: string };
+type Site = { $: "Home"; product: Product } | { $: "Alias"; home: string };
 
-const sites = new Map<string, Site>(
-  products.flatMap((product): [string, Site][] => {
-    const home = new URL(product.home).hostname;
-    if (product.site === "Local")
-      return [home, ...product.aliases].map((host) => [host, { $: "Install", product }]);
-    const aliases = product.aliases.map((alias): [string, Site] => [
-      alias,
-      { $: "Alias", home: product.home },
-    ]);
-    return product.site === "Built" ? [[home, { $: "Home", product }], ...aliases] : aliases;
-  }),
-);
-
-// `curl … | sh` sends `Accept: */*`; a browser asks for HTML and an agent for Markdown.
-function wantsPage(request: Request): boolean {
-  const accept = request.headers.get("Accept") ?? "";
-  return accept.includes("text/html") || accept.includes("text/markdown");
-}
-
-/** The installer for `/install`, and for `/` when the client does not want the page. */
-function script(request: Request, url: URL, product: Product): Response | undefined {
-  const { installer } = product;
-  if (installer.$ !== "Script") return undefined;
-  if (url.pathname !== "/install" && (url.pathname !== "/" || wantsPage(request))) return undefined;
-  return new Response(null, { status: 302, headers: { Location: installer.url, Vary: "Accept" } });
-}
-
-/** A `Local` product's host: the installer for `curl`, the page on gildrb.com for the rest. */
-function install(request: Request, url: URL, product: Product): Response {
-  return (
-    script(request, url, product) ??
-    new Response(null, {
-      status: 302,
-      headers: { Location: productUrl(product), Vary: "Accept" },
-    })
-  );
-}
+const sites = new Map<string, Site>([
+  ...builtProducts.map((product): [string, Site] => [
+    new URL(product.home).hostname,
+    { $: "Home", product },
+  ]),
+  ...products.flatMap((product) =>
+    product.aliases.map((alias): [string, Site] => [alias, { $: "Alias", home: product.home }]),
+  ),
+]);
 
 const text = (body: string, type: string) =>
   new Response(body, {
@@ -84,8 +52,18 @@ const pageFiles = [
 
 function serve(request: Request, url: URL, product: Product): Promise<Response> | Response {
   const { pathname } = url;
-  const redirect = script(request, url, product);
-  if (redirect) return redirect;
+  const installer = product.installer;
+  if (installer.$ === "Script") {
+    // `curl … | sh` sends `Accept: */*`; a browser asks for HTML and an agent for Markdown, and
+    // both get the page.
+    const accept = request.headers.get("Accept") ?? "";
+    const page = accept.includes("text/html") || accept.includes("text/markdown");
+    if (pathname === "/install" || (pathname === "/" && !page))
+      return new Response(null, {
+        status: 302,
+        headers: { Location: installer.url, Vary: "Accept" },
+      });
+  }
   if (pathname === "/robots.txt")
     return text(`User-agent: *\nAllow: /\n\nSitemap: ${product.home}/sitemap.xml\n`, "text/plain");
   if (pathname === "/sitemap.xml")
@@ -116,8 +94,6 @@ export default {
         return Response.redirect(`${site.home}${url.pathname}${url.search}`, 301);
       case "Home":
         return serve(request, url, site.product);
-      case "Install":
-        return install(request, url, site.product);
       default: {
         const _: never = site;
         return _;

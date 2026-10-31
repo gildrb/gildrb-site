@@ -6,7 +6,6 @@ import {
   origin,
   pages,
   person,
-  productUrl,
   products,
   profiles,
   projects,
@@ -48,7 +47,7 @@ export const profile = {
       about: { "@id": url("/#person") },
       hasPart: [
         ...cases.map(({ slug }) => ({ "@id": url(`/${slug}#case-study`) })),
-        ...products.map((item) => ({ "@id": `${productUrl(item)}#software` })),
+        ...products.map(({ home }) => ({ "@id": `${home}/#software` })),
       ],
     },
     {
@@ -89,8 +88,8 @@ export const profile = {
     })),
     ...products.map((item) => ({
       "@type": "SoftwareApplication",
-      "@id": `${productUrl(item)}#software`,
-      url: productUrl(item),
+      "@id": `${item.home}/#software`,
+      url: `${item.home}/`,
       name: item.name,
       description: item.description,
       applicationCategory: item.category,
@@ -268,16 +267,16 @@ ${cases
 
 /**
  * Pages for search engines only: the Markdown and machine-readable copies are found through
- * llms.txt and the `alternate` links. Product pages on gildrb.com and its subdomains belong here
- * too, since one Search Console domain property covers them; other domains keep their own sitemap.
+ * llms.txt and the `alternate` links. Product pages on gildrb.com subdomains belong here too,
+ * since one Search Console domain property covers them; other domains keep their own sitemap.
  */
 const sitemapUrls = [
   url("/"),
   url("/all"),
   ...[...cases, ...pages].map(({ slug }) => url(`/${slug}`)),
   ...products
-    .map(productUrl)
-    .filter((page) => `.${new URL(page).hostname}`.endsWith(`.${new URL(origin).hostname}`)),
+    .map(({ home }) => `${home}/`)
+    .filter((home) => new URL(home).hostname.endsWith(`.${new URL(origin).hostname}`)),
 ];
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

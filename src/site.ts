@@ -226,29 +226,22 @@ export function caseWork(item: Case) {
   } as const;
 }
 
-/**
- * Software I make. Most have their own host, and `gildrb.com/<slug>` redirects there; a `Local`
- * one has its page on gildrb.com and its own host only installs.
- */
+/** Software I make. Each has its own host; `gildrb.com/<slug>` redirects there. */
 export type Product = Row & {
   slug: string;
-  /** Old slugs; `gildrb.com/<former>` redirects to the page. */
+  /** Old slugs; `gildrb.com/<former>` redirects to `home` too. */
   formerSlugs: readonly string[];
   name: string;
-  /** The product's own origin. Its root is the page, except for `Local` products. */
+  /** The origin the page lives on; its canonical URL is this origin's root. */
   home: `https://${string}`;
-  /**
-   * Hosts that redirect to `home`, keeping the path (`worker/products.ts`). A `Local` product's
-   * aliases act as `home`.
-   */
+  /** Hosts that redirect to `home`, keeping the path (`worker/products.ts`). */
   aliases: readonly string[];
   /**
-   * Who serves the page. `Built`: this site, from `src/content/<slug>.md`, on `home` through the
-   * products Worker. `Local`: this site, from the same file, at `gildrb.com/<slug>`; `home` only
-   * serves the installer and redirects the rest to the page. `Own`: a site of its own, elsewhere
-   * (eukhe.com is gildrb/eukhe-site); this site only links and redirects there.
+   * Who serves `home`. `Built`: this site, from `src/content/<slug>.md`, through the products
+   * Worker. `Own`: a site of its own, elsewhere (eukhe.com is gildrb/eukhe-site); this site only
+   * links and redirects there.
    */
-  site: "Built" | "Local" | "Own";
+  site: "Built" | "Own";
   /** Tab and search title: what it does, in the words people search for. */
   headline: string;
   repository: `https://github.com/${string}`;
@@ -259,7 +252,7 @@ export type Product = Row & {
   converter: boolean;
   /**
    * A `curl … | sh` installer behind the home host: `/install` always, and `/` for clients that
-   * do not ask for HTML (`Local`: for clients that do not ask for HTML or Markdown).
+   * do not ask for HTML.
    */
   installer: { $: "None" } | { $: "Script"; url: `https://${string}` };
 };
@@ -319,7 +312,7 @@ export const products: readonly Product[] = [
     links: [],
     home: "https://porthmeus.com",
     aliases: ["www.porthmeus.com", "poros.gildrb.com"],
-    site: "Local",
+    site: "Built",
     headline: "Porthmeus: open your server's dev server on your Mac or phone over Tailscale",
     description: "One command, one private HTTPS link to a dev server on your tailnet.",
     repository: "https://github.com/gildrb/porthmeus",
@@ -333,18 +326,8 @@ export const products: readonly Product[] = [
   },
 ];
 
-/** The products whose pages this site builds (`site: "Built"` or `"Local"`). */
-export const builtProducts = products.filter((product) => product.site !== "Own");
-
-/** A product page's link: a path on this site for `Local` products, else the home root. */
-export function productHref(product: Product): string {
-  return product.site === "Local" ? `/${product.slug}` : `${product.home}/`;
-}
-
-/** A product page's canonical URL. */
-export function productUrl(product: Product): string {
-  return new URL(productHref(product), origin).href;
-}
+/** The products whose pages this site builds and the products Worker serves (`site: "Built"`). */
+export const builtProducts = products.filter((product) => product.site === "Built");
 
 /** Projects that live elsewhere: their rows link out instead of to a case study. */
 const externals: readonly External[] = [];
@@ -361,7 +344,7 @@ export type Project = Row & { href: string; external: boolean };
  */
 export const projects: readonly Project[] = [
   ...cases.map((item) => ({ ...item, href: `/${item.slug}`, external: false })),
-  ...products.map((item) => ({ ...item, href: productHref(item), external: false })),
+  ...products.map((item) => ({ ...item, href: `${item.home}/`, external: false })),
   ...externals.map((item) => ({ ...item, external: true })),
 ].toSorted(
   (left, right) =>
