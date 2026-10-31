@@ -353,38 +353,7 @@ export function Links({ home = false }: { home?: boolean }) {
         </p>
         {profiles.map((item) => link(item, styles.profileGroup, true))}
       </div>
-      <Metadata />
     </nav>
-  );
-}
-
-/**
- * src and llms.txt, what agents read: the sidebar's third group, under Links. Desktop only —
- * on phones the homepage keeps its links under the name.
- */
-function Metadata() {
-  return (
-    <div {...stylex.props(styles.profileGroup, styles.metadata)}>
-      <p {...stylex.props(ui.label, styles.label, styles.profileLabel)}>
-        <span data-nosnippet>Agents</span>
-      </p>
-      <a
-        {...stylex.props(ui.quiet, ui.respond, ui.focusRing, styles.link)}
-        href="https://github.com/gildrb/gildrb.com"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        src
-      </a>
-      <a
-        {...stylex.props(ui.quiet, ui.respond, ui.focusRing, styles.link)}
-        href="/llms.txt"
-        rel="alternate"
-        type="text/markdown"
-      >
-        llms.txt
-      </a>
-    </div>
   );
 }
 
@@ -644,12 +613,6 @@ const styles = stylex.create({
   },
   label: { width: "fit-content" },
   profileLabel: { marginTop: { default: null, [media.desktop]: space.sidebarBaselinePitch } },
-  /** The agents' group: its own stack; phones meet the site through its pages, not its plumbing. */
-  metadata: {
-    display: { default: "flex", [media.mobile]: "none" },
-    flexDirection: "column",
-    rowGap: space.linkGap,
-  },
   /** Compact (a dense homepage too short for the whole sidebar, see `align.ts`): contact stays. */
   profileGroup: {
     display: {
