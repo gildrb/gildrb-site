@@ -45,27 +45,25 @@ export function Row({ project, first, home }: { project: Project; first: boolean
       >
         {project.title}
       </Title>
-      <span {...stylex.props(styles.rest)}>
-        <span {...stylex.props(ui.text, styles.descriptor)} id={`${id}-descriptor`} data-descriptor>
-          {group.$ === "Design" ? group.work : project.descriptor}
-        </span>
-        {group.$ === "Design" ? (
-          <time
-            {...stylex.props(ui.text, styles.cell, styles.date)}
-            id={`${id}-end`}
-            dateTime={project.date}
-          >
-            <Figures text={project.date.slice(0, 4)} />
-            <span {...stylex.props(styles.monthDay)}>
-              <Figures text={project.date.slice(4)} />
-            </span>
-          </time>
-        ) : (
-          <span {...stylex.props(ui.text, styles.cell, styles.date)} id={`${id}-end`}>
-            {group.platform}
-          </span>
-        )}
+      <span {...stylex.props(ui.text, styles.descriptor)} id={`${id}-descriptor`}>
+        {group.$ === "Design" ? group.work : project.descriptor}
       </span>
+      {group.$ === "Design" ? (
+        <time
+          {...stylex.props(ui.text, styles.cell, styles.date)}
+          id={`${id}-end`}
+          dateTime={project.date}
+        >
+          <Figures text={project.date.slice(0, 4)} />
+          <span {...stylex.props(styles.monthDay)}>
+            <Figures text={project.date.slice(4)} />
+          </span>
+        </time>
+      ) : (
+        <span {...stylex.props(ui.text, styles.cell, styles.date)} id={`${id}-end`}>
+          {group.platform}
+        </span>
+      )}
       <span {...stylex.props(ui.srOnly)} id={`${id}-description`}>
         {project.description}
       </span>
@@ -75,26 +73,20 @@ export function Row({ project, first, home }: { project: Project; first: boolean
 
 const styles = stylex.create({
   /**
-   * The descriptor and the closing fact. Desktop: no box of its own, so both sit in the table's
-   * columns. Phones: one flex line over both columns, so each descriptor runs up to its own row's
-   * date or platform instead of stopping where the widest one starts.
+   * Desktop: one line on the table's columns (subgrid). Phones: a two-line cell, as in iOS Mail:
+   * the title and the fact set right on the first line, the descriptor under them across the row,
+   * so nothing is cut and nothing scrolls. Two 24px lines and a unit above and below: 64px.
    */
-  rest: {
-    display: { default: "contents", [media.mobile]: "flex" },
-    gridColumn: { default: null, [media.mobile]: "2 / -1" },
-    gridRow: { default: null, [media.mobile]: 1 },
-    alignItems: { default: null, [media.mobile]: "baseline" },
-    columnGap: { default: null, [media.mobile]: space.mobileTableGap },
-    minWidth: { default: null, [media.mobile]: 0 },
-  },
   row: {
     display: "grid",
     gridColumn: "1 / -1",
-    gridTemplateColumns: "subgrid",
+    gridTemplateColumns: { default: "subgrid", [media.mobile]: "minmax(0, 1fr) auto" },
+    columnGap: { default: null, [media.mobile]: space.mobileTableGap },
     alignItems: "baseline",
     width: "100%",
-    // Phones: one touch target per row. Desktop: 2.5rem, the pitch the sidebar is aligned to.
-    paddingBlock: { default: space.touchInset, [media.desktop]: space.portfolioRowPadding },
+    // Phones: a unit above and below the two lines. Desktop: 2.5rem, the pitch the sidebar is
+    // aligned to.
+    paddingBlock: { default: space.unit, [media.desktop]: space.portfolioRowPadding },
     // Only hover (where there is hover) and keyboard focus raise the row; a finger's press
     // does not (the grey tap flash is off too, see `layout.tsx`).
     color: {
@@ -124,7 +116,7 @@ const styles = stylex.create({
    * last figure on the row's right edge.
    */
   date: {
-    gridColumn: 3,
+    gridColumn: { default: 3, [media.mobile]: 2 },
     justifySelf: "end",
     position: "relative",
     display: "block",
@@ -140,16 +132,8 @@ const styles = stylex.create({
   /** The thing named, at the emphasis weight; the descriptor and date beside it stay at the text's. */
   title: { gridColumn: 1, margin: 0, color: colors.primary, fontWeight: typeScale.emphasisWeight },
   descriptor: {
-    gridColumn: 2,
-    gridRow: 1,
-    // Phones: the homepage table scrolls sideways, so its descriptors always fit; elsewhere (the
-    // case pages' next projects) one that does not fit ends in an ellipsis.
-    minWidth: { default: null, [media.mobile]: 0 },
-    overflow: { default: null, [media.mobile]: "hidden" },
-    whiteSpace: { default: null, [media.mobile]: "nowrap" },
-    textOverflow: { default: null, [media.mobile]: "ellipsis" },
-    // Phones: fills the line up to the closing fact, which stays on the row's right edge.
-    flexGrow: { default: null, [media.mobile]: 1 },
+    gridColumn: { default: 2, [media.mobile]: "1 / -1" },
+    gridRow: { default: 1, [media.mobile]: 2 },
     // The row's own colour (grey, full contrast on its hover or focus), inherited, so the subject
     // fades with the row on leaving; a colour of its own here would switch at once.
     color: "inherit",

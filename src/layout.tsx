@@ -54,13 +54,13 @@ const globalCss = [
   `::selection{color:${colors.bg};background:${colors.primary}}`,
   // A touch shows nothing: no grey tap flash, and no press state takes its place.
   "a,button{-webkit-tap-highlight-color:transparent}",
-  // Where the homepage list scrolls on a dense desktop, the edge fades (`portfolio.tsx`) dim rows
-  // as they near an edge. Under the top fade a row also fades as a whole, in its own view
-  // timeline, and is gone by the time its text reaches the edge (12% of a 32px row, its 4px): no
-  // row is cut while it shows, so no sliver of a word is left at the top edge. Phones cannot: a
-  // row's view timeline follows its nearest scroller, there its group's sideways one.
-  "@keyframes list-row-dense{entry 0%,exit 0%{opacity:1}exit 12%,exit 100%{opacity:0}}",
-  "@supports (animation-timeline:view()){@media (min-width:768px){[data-dense] [data-rows]>div>*{animation:list-row-dense linear both;animation-timeline:view()}}}",
+  // Where the homepage list scrolls (phones, dense desktop), the edge fades (`portfolio.tsx`) dim
+  // rows as they near an edge. Under the top fade a row also fades as a whole, in its own view
+  // timeline, and is gone by the time its text reaches the edge (12%: a 64px phone row's 8px
+  // inset, a 32px desktop row's 4px): no row is cut while it shows, so no sliver of a word is
+  // left at the top edge. There the fade already covers it nearly whole.
+  "@keyframes list-row{entry 0%,exit 0%{opacity:1}exit 12%,exit 100%{opacity:0}}",
+  "@supports (animation-timeline:view()){@media (max-width:767px){[data-rows]>div>*{animation:list-row linear both;animation-timeline:view()}}@media (min-width:768px){[data-dense] [data-rows]>div>*{animation:list-row linear both;animation-timeline:view()}}}",
   // In-page links (skip to content, back to top) glide unless motion is reduced. Moving between
   // pages has no transition: a cross-document one freezes the page until it ends, so Back or
   // another click during it cannot cancel it and shows a flash. The browser swaps pages at once,
@@ -365,10 +365,10 @@ const phoneGutter = `calc(${space.sectionGap} / 2)`;
 const phoneGutterLeft = `max(${phoneGutter}, env(safe-area-inset-left))`;
 /**
  * Phones wider than the text's column (tablets, narrow windows) centre the whole page on it, name
- * bar and theme toggle included, so nothing stands apart at the viewport's edges. Phones have no
- * classic scrollbar, so `100vw` is the viewport's width wherever the insets are read.
+ * bar and theme toggle included, so nothing stands apart at the viewport's edges. In the wrapper
+ * and on fixed elements `100%` is the viewport's width.
  */
-const phoneMargin = `calc((100vw - ${space.contentColumn}) / 2)`;
+const phoneMargin = `calc((100% - ${space.contentColumn}) / 2)`;
 const phoneInsetLeft = `max(${phoneGutterLeft}, ${phoneMargin})`;
 // The scrollbar's widest thumb (9px hovered at its 4px inset) plus a clear unit beside the text.
 const pagebarRoom = `calc(${space.unit} + 13px)`;
@@ -406,16 +406,13 @@ const styles = stylex.create({
   wrapper: {
     // A minimum margin: the layout keeps its full width until the viewport cannot fit it. Four
     // units, a sidebar pitch. Beside a notch the margin grows to clear it (`viewport-fit=cover`).
-    // Phones: also as `--inset-left`/`--inset-right`, for what bleeds to the screen's edges.
-    "--inset-left": { default: null, [media.mobile]: phoneInsetLeft },
-    "--inset-right": { default: null, [media.mobile]: phoneInsetRight },
     paddingLeft: {
       default: `max(calc(4 * ${space.unit}), env(safe-area-inset-left))`,
-      [media.mobile]: "var(--inset-left)",
+      [media.mobile]: phoneInsetLeft,
     },
     paddingRight: {
       default: `max(calc(4 * ${space.unit}), env(safe-area-inset-right))`,
-      [media.mobile]: "var(--inset-right)",
+      [media.mobile]: phoneInsetRight,
     },
   },
   /** Desktop: sidebar and content, one block centred in the wrapper at every width. */
@@ -605,10 +602,10 @@ const styles = stylex.create({
     flex: { default: null, [media.mobile]: "1 1 0" },
     minWidth: 0,
   },
-  /** Phones: Links first, on the left, as wide as the table's Project column and its gap. */
+  /** Phones: Links first, on the left half; Contact takes the right half. */
   profiles: {
     order: { default: null, [media.mobile]: -1 },
-    flex: { default: null, [media.mobile]: "0 0 var(--subject-start, 50%)" },
+    flex: { default: null, [media.mobile]: "0 0 50%" },
   },
   label: { width: "fit-content" },
   profileLabel: { marginTop: { default: null, [media.desktop]: space.sidebarBaselinePitch } },
