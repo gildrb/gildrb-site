@@ -87,7 +87,7 @@ export const cases: readonly Case[] = [
     descriptor: "On-device AI for Mac",
     group: { $: "Work", work: "Brand and website" },
     repository: null,
-    links: [{ label: "Site", href: "https://localstudio.gildrb.com/" }],
+    links: [{ label: "Site", href: "https://localstudio.ai/" }],
     description: "Brand and website for Local Studio, private AI on a Mac.",
     ogDescription: "Brand and website for Local Studio, private AI on a Mac.",
     ogImage: "gil-rodrigues-local-studio-tour-960.webp",
