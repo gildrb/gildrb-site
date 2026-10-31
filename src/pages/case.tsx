@@ -23,6 +23,8 @@ import {
   pages,
   person,
   type Product,
+  productHref,
+  productUrl,
   products,
   type Project,
   projects,
@@ -373,8 +375,8 @@ export function DocPage({
 }
 
 /**
- * A product, served on its own host (see `worker/products.ts`): an article on what it solves,
- * with Archetypon's converter right after the opening.
+ * A product, served on its own host (see `worker/products.ts`) or, if `Local`, on this site: an
+ * article on what it solves, with Archetypon's converter right after the opening.
  */
 export function ProductPage({
   assets,
@@ -385,8 +387,8 @@ export function ProductPage({
   item: Product;
   markdown: string;
 }) {
-  const url = `${item.home}/`;
-  const others = next(url);
+  const url = productUrl(item);
+  const others = next(productHref(item));
   return (
     <Frame
       assets={assets}

@@ -5,7 +5,16 @@ import { files } from "./files.ts";
 import type { Assets } from "./layout.tsx";
 import { AllPage, CasePage, DocPage, ProductPage } from "./pages/case.tsx";
 import { Home } from "./pages/home.tsx";
-import { builtProducts, type Case, cases, origin, pages, type Product, products } from "./site.ts";
+import {
+  builtProducts,
+  type Case,
+  cases,
+  origin,
+  pages,
+  type Product,
+  productUrl,
+  products,
+} from "./site.ts";
 
 // For the build (`vite.config.ts`): the share image comes first, since the pages link it, and the
 // stamped copies of `public/` files last, once rendering has named them all.
@@ -108,11 +117,11 @@ function fullText(): string {
       source: `/content/${slug}.md`,
       body: published(slug),
     })),
-    ...builtProducts.map(({ slug, name, home }) => ({
-      heading: name,
-      path: `${home}/`,
-      source: `/content/${slug}.md`,
-      body: published(slug),
+    ...builtProducts.map((item) => ({
+      heading: item.name,
+      path: productUrl(item),
+      source: `/content/${item.slug}.md`,
+      body: published(item.slug),
     })),
   ];
   return `# gildrb.com
