@@ -17,10 +17,11 @@ export type Media = {
   /**
    * Shown in the archive (`archive.tsx`): finished or working artwork of Gil's own, not
    * feedback threads, app screenshots or other people's work. Labelled with its case study:
-   * the one whose page shows it, else `project`; "Archive" when it belongs to none.
+   * the one whose page shows it, else `project` (a case or a product); "Archive" when it
+   * belongs to none.
    */
   archive?: true;
-  /** Archive work that no case page shows but that belongs to this case study (its slug). */
+  /** Archive work that no case page shows but that belongs to this case or product (its slug). */
   project?: string;
 };
 
@@ -44,6 +45,20 @@ export const media: Readonly<Record<string, Media>> = {
     alt: "Velázquez's painting Apollo in the Forge of Vulcan: Apollo, haloed, speaks to Vulcan and his smiths at the anvil",
     width: 2952,
     height: 2214,
+  },
+  "eukhe-terminal": {
+    alt: "eukhe.com as a Neovim terminal: the page's Markdown with line numbers, and each line's color tokens beside it",
+    archive: true,
+    project: "eukhe",
+    width: 2560,
+    height: 1600,
+  },
+  "heph-terminal": {
+    alt: "Heph's glass terminal window over Velázquez's Apollo in the Forge of Vulcan: a cited answer, its quotes verified",
+    archive: true,
+    project: "heph",
+    width: 1637,
+    height: 1214,
   },
   "heph-session": {
     alt: "Screen recording of Heph in the terminal answering questions about a folder of lecture notes, citing the files behind each answer",
