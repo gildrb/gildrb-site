@@ -54,10 +54,7 @@ export function Row({ project, first, home }: { project: Project; first: boolean
           id={`${id}-end`}
           dateTime={project.date}
         >
-          <Figures text={project.date.slice(0, 4)} />
-          <span {...stylex.props(styles.monthDay)}>
-            <Figures text={project.date.slice(4)} />
-          </span>
+          <Figures text={project.date} />
         </time>
       ) : (
         <span {...stylex.props(ui.text, styles.cell, styles.date)} id={`${id}-end`}>
@@ -124,11 +121,6 @@ const styles = stylex.create({
     color: "inherit",
     paddingInlineEnd: 0,
   },
-  /**
-   * Phones show the year alone, so the description keeps its room; the month and day stay in the
-   * row's accessible name (`aria-labelledby` reads hidden text) and in `dateTime`.
-   */
-  monthDay: { display: { default: "inline", [media.mobile]: "none" } },
   /** The thing named, at the emphasis weight; the descriptor and date beside it stay at the text's. */
   title: { gridColumn: 1, margin: 0, color: colors.primary, fontWeight: typeScale.emphasisWeight },
   descriptor: {
