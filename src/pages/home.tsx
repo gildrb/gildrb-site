@@ -86,9 +86,7 @@ export function Home({ assets, work }: { assets: Assets; work: readonly Work[] }
             component={Portfolio}
             // Works the table does not lead to: archive-only ones and those of unlisted cases.
             props={{
-              more: work.filter(
-                ({ from }) => from.$ === "Archive" || (from.$ === "Case" && !from.project.listed),
-              ).length,
+              more: work.filter(({ from }) => from.$ === "Archive" || !from.project.listed).length,
             }}
           />
         </Main>

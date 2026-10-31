@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import { parse, sources } from "./markdown.tsx";
 import { type Media, media as artwork } from "./media.ts";
-import { type Case, cases, type Product, products } from "./site.ts";
+import { type Case, cases } from "./site.ts";
 import { baseline, colors, media, space, typeScale } from "./tokens.stylex.ts";
 import { ui } from "./ui.tsx";
 import { versioned } from "./versioned.ts";
@@ -16,32 +16,23 @@ function share(item: Media): string {
 }
 
 /**
- * One piece of artwork and where it comes from: a case study, a product (its own site), or the
- * archive alone for work that has no project page.
+ * One piece of artwork and where it comes from: a case study, or the archive alone for work
+ * that has no project page.
  */
-export type Work = {
-  id: string;
-  from: { $: "Case"; project: Case } | { $: "Product"; product: Product } | { $: "Archive" };
-};
+export type Work = { id: string; from: { $: "Case"; project: Case } | { $: "Archive" } };
 
 /**
- * The archive: every `archive` media item. First the products' (tagged with a product's slug),
- * then newest case first, each case's in its page's order and then those tagged with its
- * `project`; last the items that belong to no case, in `media.ts` order.
+ * The archive: every `archive` media item, newest case first, each case's in its page's order and
+ * then those tagged with its `project`; last the items that belong to no case, in `media.ts`
+ * order.
  */
 export function collect(markdown: Readonly<Record<string, string>>): Work[] {
   const entries = Object.entries(artwork).filter(([, item]) => item.archive === true);
   for (const [id, { project }] of entries) {
-    const known = [...cases, ...products].some(({ slug }) => slug === project);
-    if (project !== undefined && !known) {
+    if (project !== undefined && !cases.some(({ slug }) => slug === project)) {
       throw new Error(`Archive media ${id} names an unknown project: ${project}`);
     }
   }
-  const made: Work[] = products.flatMap((product) =>
-    entries
-      .filter(([, item]) => item.project === product.slug)
-      .map(([id]): Work => ({ id, from: { $: "Product", product } })),
-  );
   const work: Work[] = cases.flatMap((project) => {
     const body = markdown[project.slug];
     if (body === undefined) throw new Error(`Missing src/content/${project.slug}.md`);
@@ -53,11 +44,11 @@ export function collect(markdown: Readonly<Record<string, string>>): Work[] {
       .filter((id, index, all) => artwork[id]?.archive === true && all.indexOf(id) === index)
       .map((id) => ({ id, from: { $: "Case", project } }));
   });
-  const shown = new Set([...made, ...work].map(({ id }) => id));
+  const shown = new Set(work.map(({ id }) => id));
   const alone: Work[] = entries
     .filter(([id]) => !shown.has(id))
     .map(([id]) => ({ id, from: { $: "Archive" } }));
-  return [...made, ...work, ...alone];
+  return [...work, ...alone];
 }
 
 /**
@@ -68,8 +59,6 @@ function destination(work: Work): { label: string; href: string } {
   switch (work.from.$) {
     case "Case":
       return { label: work.from.project.name, href: `/${work.from.project.slug}` };
-    case "Product":
-      return { label: work.from.product.name, href: work.from.product.home };
     case "Archive":
       return { label: "Archive", href: `/all?open=${work.id}` };
     default: {
@@ -84,10 +73,6 @@ function sortData(work: Work) {
   switch (work.from.$) {
     case "Case": {
       const { date, title } = work.from.project;
-      return { "data-date": date, "data-title": title };
-    }
-    case "Product": {
-      const { date, title } = work.from.product;
       return { "data-date": date, "data-title": title };
     }
     case "Archive":
@@ -164,7 +149,7 @@ function Tile({ work, load }: { work: Work; load: Load }) {
         {art}
       </button>
       <figcaption {...stylex.props(styles.caption)}>
-        {work.from.$ !== "Archive" ? (
+        {work.from.$ === "Case" ? (
           <a {...stylex.props(ui.quiet, ui.respond, ui.focusRing)} href={href}>
             {label}
           </a>
