@@ -14,8 +14,7 @@ export const person = {
   alternateNames: ["Gil", "gildrb", "Gil Rodrigues Barbosa", "Gil Domingos Rodrigues Barbosa"],
   role: "Design Engineer",
   /** The About text: the homepage, metadata, feeds and llms.txt. */
-  about:
-    "Design Engineer in Germany. I take interfaces that are almost right and make them correct: type, spacing, states, motion, and the performance to carry them. Convenience gives way to correctness.",
+  about: "Design engineer based in Germany.",
 } as const;
 
 export type Link = { label: string; href: string };
