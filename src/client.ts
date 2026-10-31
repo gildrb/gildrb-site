@@ -8,7 +8,6 @@ import { space } from "./tokens.stylex.ts";
 import { loadPagesAhead } from "./ahead.ts";
 import { toggleLinks } from "./links.ts";
 import { trackContents } from "./contents.ts";
-import { loopDescriptors } from "./descriptor.ts";
 import { autoplayVideos } from "./video.ts";
 import { enableZoom } from "./zoom.ts";
 
@@ -16,7 +15,6 @@ toggleLinks();
 enableZoom();
 autoplayVideos();
 trackContents();
-loopDescriptors();
 loadPagesAhead();
 
 const islands: { [Name in keyof Islands]: () => Promise<Islands[Name]> | Islands[Name] } = {

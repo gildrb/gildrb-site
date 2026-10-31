@@ -1,15 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import { useId } from "preact/hooks";
 import type { Project } from "./site.ts";
-import {
-  colors,
-  descriptorMarker,
-  fade,
-  media,
-  rowMarker,
-  space,
-  typeScale,
-} from "./tokens.stylex.ts";
+import { colors, media, rowMarker, space, typeScale } from "./tokens.stylex.ts";
 import { Figures, ui, untranslated } from "./ui.tsx";
 
 /**
@@ -54,14 +46,8 @@ export function Row({ project, first, home }: { project: Project; first: boolean
         {project.title}
       </Title>
       <span {...stylex.props(styles.rest)}>
-        <span
-          {...stylex.props(ui.text, descriptorMarker, styles.descriptor)}
-          id={`${id}-descriptor`}
-          data-descriptor
-        >
-          <span {...stylex.props(styles.track)}>
-            {group.$ === "Design" ? group.work : project.descriptor}
-          </span>
+        <span {...stylex.props(ui.text, styles.descriptor)} id={`${id}-descriptor`} data-descriptor>
+          {group.$ === "Design" ? group.work : project.descriptor}
         </span>
         {group.$ === "Design" ? (
           <time
@@ -156,49 +142,16 @@ const styles = stylex.create({
   descriptor: {
     gridColumn: 2,
     gridRow: 1,
-    // A descriptor that still does not fit scrolls to its end, fades and starts over
-    // (`descriptor.ts`); until then, or with motion reduced, it ellipsizes.
+    // Phones: the homepage table scrolls sideways, so its descriptors always fit; elsewhere (the
+    // case pages' next projects) one that does not fit ends in an ellipsis.
     minWidth: { default: null, [media.mobile]: 0 },
     overflow: { default: null, [media.mobile]: "hidden" },
     whiteSpace: { default: null, [media.mobile]: "nowrap" },
-    textOverflow: {
-      default: null,
-      [media.mobile]: "ellipsis",
-      ":is([data-marquee])": { [media.motion]: "clip" },
-    },
+    textOverflow: { default: null, [media.mobile]: "ellipsis" },
     // Phones: fills the line up to the closing fact, which stays on the row's right edge.
     flexGrow: { default: null, [media.mobile]: 1 },
-    // While it scrolls, the text fades at both edges instead of being cut: on the right over the
-    // last table gap, on the left over a unit reaching into the gap beside the title, so the
-    // text's resting place does not move.
-    maskImage: {
-      default: null,
-      ":is([data-marquee])": { [media.motion]: fade.both },
-    },
-    marginInlineStart: {
-      default: null,
-      ":is([data-marquee])": { [media.motion]: `calc(-1 * ${space.unit})` },
-    },
-    paddingInlineStart: {
-      default: null,
-      ":is([data-marquee])": { [media.motion]: space.unit },
-    },
     // The row's own colour (grey, full contrast on its hover or focus), inherited, so the subject
     // fades with the row on leaving; a colour of its own here would switch at once.
     color: "inherit",
-  },
-  /**
-   * A descriptor wider than its cell (`descriptor.ts` sets `data-marquee` and runs the round):
-   * the text as one box, so it can move as one. Motion reduced, it never moves and stays
-   * ellipsized.
-   */
-  track: {
-    display: {
-      default: "inline",
-      [stylex.when.ancestor("[data-marquee]", descriptorMarker)]: {
-        default: "inline",
-        [media.motion]: "inline-block",
-      },
-    },
   },
 });

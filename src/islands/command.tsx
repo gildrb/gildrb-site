@@ -74,7 +74,7 @@ export function Command({ commands }: { commands: readonly string[] }) {
  *   block is 40px, the table's row pitch. The lines take the same half unit above and below, so
  *   they sit a unit in from the edge, with two units at the left, as a code block's do.
  * - Each command stays on one line. A command wider than the lines scrolls sideways and fades out
- *   before the button, as a looping descriptor in the table does (`fade.end`). Copying gives one
+ *   before the button (`fade.end`). Copying gives one
  *   command per line.
  */
 const styles = stylex.create({

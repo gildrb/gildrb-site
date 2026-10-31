@@ -397,10 +397,10 @@ const phoneGutter = `calc(${space.sectionGap} / 2)`;
 const phoneGutterLeft = `max(${phoneGutter}, env(safe-area-inset-left))`;
 /**
  * Phones wider than the text's column (tablets, narrow windows) centre the whole page on it, name
- * bar and theme toggle included, so nothing stands apart at the viewport's edges. In the wrapper
- * and on fixed elements `100%` is the viewport's width.
+ * bar and theme toggle included, so nothing stands apart at the viewport's edges. Phones have no
+ * classic scrollbar, so `100vw` is the viewport's width wherever the insets are read.
  */
-const phoneMargin = `calc((100% - ${space.contentColumn}) / 2)`;
+const phoneMargin = `calc((100vw - ${space.contentColumn}) / 2)`;
 const phoneInsetLeft = `max(${phoneGutterLeft}, ${phoneMargin})`;
 // The scrollbar's widest thumb (9px hovered at its 4px inset) plus a clear unit beside the text.
 const pagebarRoom = `calc(${space.unit} + 13px)`;
@@ -438,13 +438,16 @@ const styles = stylex.create({
   wrapper: {
     // A minimum margin: the layout keeps its full width until the viewport cannot fit it. Four
     // units, a sidebar pitch. Beside a notch the margin grows to clear it (`viewport-fit=cover`).
+    // Phones: also as `--inset-left`/`--inset-right`, for what bleeds to the screen's edges.
+    "--inset-left": { default: null, [media.mobile]: phoneInsetLeft },
+    "--inset-right": { default: null, [media.mobile]: phoneInsetRight },
     paddingLeft: {
       default: `max(calc(4 * ${space.unit}), env(safe-area-inset-left))`,
-      [media.mobile]: phoneInsetLeft,
+      [media.mobile]: "var(--inset-left)",
     },
     paddingRight: {
       default: `max(calc(4 * ${space.unit}), env(safe-area-inset-right))`,
-      [media.mobile]: phoneInsetRight,
+      [media.mobile]: "var(--inset-right)",
     },
   },
   /** Desktop: sidebar and content, one block centred in the wrapper at every width. */

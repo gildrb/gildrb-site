@@ -241,7 +241,13 @@ const styles = stylex.create({
       [media.desktop]: "contents",
       [stylex.when.ancestor("[data-dense]", rootMarker)]: { [media.desktop]: "grid" },
     },
-    gridTemplateColumns: "subgrid",
+    // Phones: the table's own columns, each as wide as its widest text, so every descriptor shows
+    // in full and the table scrolls sideways when the screen is narrower.
+    gridTemplateColumns: {
+      default: "subgrid",
+      [media.mobile]: "max-content minmax(max-content, 1fr) max-content",
+    },
+    columnGap: { default: null, [media.mobile]: space.mobileTableGap },
     gridColumn: "1 / -1",
     gridRow: {
       default: null,
@@ -259,6 +265,20 @@ const styles = stylex.create({
       default: null,
       [media.mobile]: "auto",
       [stylex.when.ancestor("[data-dense]", rootMarker)]: { [media.desktop]: "auto" },
+    },
+    overflowX: { default: null, [media.mobile]: "auto" },
+    // Phones, as paco.me's lists: the scroller reaches the screen's edges and pads back to the
+    // text's, so at rest the table stands where it did; scrolled, rows pass under a fade as wide
+    // as each margin instead of being cut at the text's edge.
+    marginInline: {
+      default: null,
+      [media.mobile]: "calc(-1 * var(--inset-left)) calc(-1 * var(--inset-right))",
+    },
+    paddingInline: { default: null, [media.mobile]: "var(--inset-left) var(--inset-right)" },
+    maskImage: {
+      default: null,
+      [media.mobile]:
+        "linear-gradient(to right, transparent, black var(--inset-left), black calc(100% - var(--inset-right)), transparent)",
     },
     scrollbarWidth: "none",
     // No overscroll lock: a pull past the list's top must chain to the page so the browser's

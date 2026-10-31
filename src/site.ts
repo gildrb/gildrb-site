@@ -70,6 +70,8 @@ export type Case = Row & {
   ogDescription: string;
   /** Social preview image, relative to `/images/optimized/`. */
   ogImage?: string;
+  /** Has a row in the homepage table; false: its page is reached from the archive only. */
+  listed: boolean;
 };
 
 type External = Row & { href: string };
@@ -77,6 +79,7 @@ type External = Row & { href: string };
 export const cases: readonly Case[] = [
   {
     slug: "local-studio",
+    listed: true,
     date: "2026-08-26",
     title: "Local Studio",
     name: "Local Studio",
@@ -91,6 +94,7 @@ export const cases: readonly Case[] = [
   },
   {
     slug: "t3",
+    listed: false,
     date: "2026-07-25",
     title: "T3",
     name: "T3",
@@ -105,6 +109,7 @@ export const cases: readonly Case[] = [
   },
   {
     slug: "ben-davis",
+    listed: false,
     date: "2026-07-07",
     title: "Ben Davis",
     name: "Ben Davis",
@@ -124,6 +129,7 @@ export const cases: readonly Case[] = [
   },
   {
     slug: "heph",
+    listed: true,
     date: "2026-04-21",
     title: "Heph",
     name: "Heph",
@@ -138,6 +144,7 @@ export const cases: readonly Case[] = [
   },
   {
     slug: "elpis",
+    listed: true,
     date: "2026-09-03",
     title: "Elpis",
     name: "Elpis",
@@ -152,6 +159,7 @@ export const cases: readonly Case[] = [
   },
   {
     slug: "filen",
+    listed: false,
     date: "2026-01-14",
     title: "Filen",
     name: "Filen",
@@ -166,6 +174,7 @@ export const cases: readonly Case[] = [
   },
   {
     slug: "n0thing",
+    listed: false,
     date: "2019-11-15",
     title: "n0thing",
     name: "Jordan Gilbert",
@@ -181,6 +190,7 @@ export const cases: readonly Case[] = [
   },
   {
     slug: "curves",
+    listed: true,
     date: "2019-01-25",
     title: "CURVES",
     name: "CURVES",
@@ -198,6 +208,7 @@ export const cases: readonly Case[] = [
   },
   {
     slug: "ml7",
+    listed: true,
     date: "2018-11-13",
     title: "mL7",
     name: "Mihai Lupascu",
@@ -343,7 +354,9 @@ export type Project = Row & { href: string; external: boolean };
  * before client work and studies, whatever their dates.
  */
 export const projects: readonly Project[] = [
-  ...cases.map((item) => ({ ...item, href: `/${item.slug}`, external: false })),
+  ...cases
+    .filter((item) => item.listed)
+    .map((item) => ({ ...item, href: `/${item.slug}`, external: false })),
   ...products.map((item) => ({ ...item, href: `${item.home}/`, external: false })),
   ...externals.map((item) => ({ ...item, external: true })),
 ].toSorted(

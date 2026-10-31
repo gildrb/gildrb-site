@@ -22,13 +22,11 @@ const titleColumn = `${field}px`;
 const tableGap = `${gutter}px`;
 
 /**
- * Text cut by its box's edge fades out instead. `end`: over the last table gap, for a command
- * wider than its block (`command.tsx`). `both`: also over a unit at the start, for a scrolling
- * descriptor (`row.tsx`). A `mask-image`.
+ * Text cut by its box's edge fades out instead: over the last table gap, for a command wider than
+ * its block (`command.tsx`). A `mask-image`.
  */
 export const fade = stylex.defineConsts({
   end: `linear-gradient(to right, black calc(100% - ${tableGap}), transparent)`,
-  both: `linear-gradient(to right, transparent, black ${unit}px, black calc(100% - ${tableGap}), transparent)`,
 });
 
 /**
@@ -334,6 +332,3 @@ export const rowMarker = stylex.defineMarker();
  * viewport is too short for the full layout (see `align.ts`).
  */
 export const rootMarker = stylex.defineMarker();
-
-/** Put on a table row's descriptor cell so its text can loop when it does not fit (`descriptor.ts`). */
-export const descriptorMarker = stylex.defineMarker();

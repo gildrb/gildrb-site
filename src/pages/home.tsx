@@ -84,7 +84,10 @@ export function Home({ assets, work }: { assets: Assets; work: readonly Work[] }
           <Island
             name="portfolio"
             component={Portfolio}
-            props={{ more: work.filter(({ from }) => from.$ === "Archive").length }}
+            // Works the table does not lead to: archive-only ones and those of unlisted cases.
+            props={{
+              more: work.filter(({ from }) => from.$ === "Archive" || !from.project.listed).length,
+            }}
           />
         </Main>
       </Shell>
