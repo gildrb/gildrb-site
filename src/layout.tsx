@@ -54,14 +54,13 @@ const globalCss = [
   `::selection{color:${colors.bg};background:${colors.primary}}`,
   // A touch shows nothing: no grey tap flash, and no press state takes its place.
   "a,button{-webkit-tap-highlight-color:transparent}",
-  // Where the homepage list scrolls (phones, dense desktop), the edge fades (`portfolio.tsx`) dim
-  // rows as they near an edge. Under the top fade a row also fades as a whole, in its own view
-  // timeline, and is gone by the time its text reaches the edge (a quarter of a phone row, its
-  // 12px inset; 12% of a 32px desktop row, its 4px): no row is cut while it shows, so no sliver
-  // of a word is left at the top edge. There the fade already covers it nearly whole.
-  "@keyframes list-row-phone{entry 0%,exit 0%{opacity:1}exit 25%,exit 100%{opacity:0}}",
+  // Where the homepage list scrolls on a dense desktop, the edge fades (`portfolio.tsx`) dim rows
+  // as they near an edge. Under the top fade a row also fades as a whole, in its own view
+  // timeline, and is gone by the time its text reaches the edge (12% of a 32px row, its 4px): no
+  // row is cut while it shows, so no sliver of a word is left at the top edge. Phones cannot: a
+  // row's view timeline follows its nearest scroller, there its group's sideways one.
   "@keyframes list-row-dense{entry 0%,exit 0%{opacity:1}exit 12%,exit 100%{opacity:0}}",
-  "@supports (animation-timeline:view()){@media (max-width:767px){[data-rows]>div>*{animation:list-row-phone linear both;animation-timeline:view()}}@media (min-width:768px){[data-dense] [data-rows]>div>*{animation:list-row-dense linear both;animation-timeline:view()}}}",
+  "@supports (animation-timeline:view()){@media (min-width:768px){[data-dense] [data-rows]>div>*{animation:list-row-dense linear both;animation-timeline:view()}}}",
   // In-page links (skip to content, back to top) glide unless motion is reduced. Moving between
   // pages has no transition: a cross-document one freezes the page until it ends, so Back or
   // another click during it cannot cancel it and shows a flash. The browser swaps pages at once,

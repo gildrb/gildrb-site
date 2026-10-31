@@ -193,7 +193,29 @@ const styles = stylex.create({
   group: {
     display: "grid",
     gridColumn: "1 / -1",
-    gridTemplateColumns: "subgrid",
+    // Phones: each group is its own sideways scroller, so only one wider than the screen
+    // scrolls; one that fits stays put. Its columns are its own, the title column one field wide
+    // in both, so the descriptors still start in one place.
+    gridTemplateColumns: {
+      default: "subgrid",
+      [media.mobile]: `${space.titleColumn} minmax(max-content, 1fr) max-content`,
+    },
+    columnGap: { default: null, [media.mobile]: space.mobileTableGap },
+    overflowX: { default: null, [media.mobile]: "auto" },
+    overflowY: { default: null, [media.mobile]: "hidden" },
+    // A sideways swipe past either end stops here: it never turns into the browser's Back.
+    overscrollBehaviorX: { default: null, [media.mobile]: "contain" },
+    // As paco.me's lists: the scroller reaches the screen's edges (the list bleeds to them) and
+    // pads back to the text's, so at rest the table stands where it would; scrolled, rows pass
+    // under a fade as wide as each margin instead of being cut at the text's edge.
+    paddingInline: { default: null, [media.mobile]: "var(--inset-left) var(--inset-right)" },
+    maskImage: {
+      default: null,
+      [media.mobile]:
+        "linear-gradient(to right, transparent, black var(--inset-left), black calc(100% - var(--inset-right)), transparent)",
+    },
+    scrollbarWidth: "none",
+    "::-webkit-scrollbar": { display: "none" },
   },
   /**
    * A group's label, where a table header would be: the label's size, grey, a hairline under it
@@ -252,10 +274,9 @@ const styles = stylex.create({
       [media.desktop]: "contents",
       [stylex.when.ancestor("[data-dense]", rootMarker)]: { [media.desktop]: "grid" },
     },
-    // Phones: two scrollers, one axis each, so a drag moves the table one way at a time, never
-    // diagonally: the section scrolls sideways, the list inside it up and down (`list`). The one
-    // column is as wide as the table's widest line, so every descriptor shows in full.
-    gridTemplateColumns: { default: "subgrid", [media.mobile]: "minmax(max-content, 1fr)" },
+    // Phones: one axis per scroller, so a drag moves the table one way at a time: the list
+    // scrolls up and down (`list`), each group inside it sideways (`group`).
+    gridTemplateColumns: { default: "subgrid", [media.mobile]: "minmax(0, 1fr)" },
     gridTemplateRows: { default: null, [media.mobile]: "minmax(0, 1fr)" },
     gridColumn: "1 / -1",
     gridRow: {
@@ -272,24 +293,7 @@ const styles = stylex.create({
     alignContent: "start",
     overflowY: {
       default: null,
-      [media.mobile]: "hidden",
       [stylex.when.ancestor("[data-dense]", rootMarker)]: { [media.desktop]: "auto" },
-    },
-    overflowX: { default: null, [media.mobile]: "auto" },
-    // A sideways swipe past either end stops here: it never turns into the browser's Back.
-    overscrollBehaviorX: { default: null, [media.mobile]: "contain" },
-    // Phones, as paco.me's lists: the scroller reaches the screen's edges and pads back to the
-    // text's, so at rest the table stands where it did; scrolled, rows pass under a fade as wide
-    // as each margin instead of being cut at the text's edge.
-    marginInline: {
-      default: null,
-      [media.mobile]: "calc(-1 * var(--inset-left)) calc(-1 * var(--inset-right))",
-    },
-    paddingInline: { default: null, [media.mobile]: "var(--inset-left) var(--inset-right)" },
-    maskImage: {
-      default: null,
-      [media.mobile]:
-        "linear-gradient(to right, transparent, black var(--inset-left), black calc(100% - var(--inset-right)), transparent)",
     },
     scrollbarWidth: "none",
     // No overscroll lock: a pull past the list's top must chain to the page so the browser's
@@ -307,15 +311,19 @@ const styles = stylex.create({
   list: {
     display: "grid",
     gridColumn: "1 / -1",
-    // Phones: the table's own columns, each as wide as its widest text.
-    gridTemplateColumns: {
-      default: "subgrid",
-      [media.mobile]: "max-content minmax(max-content, 1fr) max-content",
+    // Phones: one column; each group sets its own (`group`). The list reaches the screen's
+    // edges, so the groups' sideways scrollers do.
+    gridTemplateColumns: { default: "subgrid", [media.mobile]: "minmax(0, 1fr)" },
+    marginInline: {
+      default: null,
+      [media.mobile]: "calc(-1 * var(--inset-left)) calc(-1 * var(--inset-right))",
     },
-    columnGap: { default: null, [media.mobile]: space.mobileTableGap },
+    // Groups are scroll containers, whose minimum height is 0: rows as tall as their content keep
+    // them whole, so the list scrolls instead of squeezing them.
+    gridAutoRows: { default: null, [media.mobile]: "max-content" },
     alignContent: "start",
     position: "relative",
-    // Phones: the up-and-down scroller, inside the sideways one (`section`).
+    // Phones: the up-and-down scroller.
     minHeight: { default: null, [media.mobile]: 0 },
     overflowY: { default: null, [media.mobile]: "auto" },
     overflowX: { default: null, [media.mobile]: "hidden" },
