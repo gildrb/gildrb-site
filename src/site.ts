@@ -12,9 +12,10 @@ export const person = {
   familyName: "Rodrigues Barbosa",
   handle: "gildrb",
   alternateNames: ["Gil", "gildrb", "Gil Rodrigues Barbosa", "Gil Domingos Rodrigues Barbosa"],
-  role: "Designer",
+  role: "Design Engineer",
   /** The About text: the homepage, metadata, feeds and llms.txt. */
-  about: "Based in Germany.",
+  about:
+    "Design Engineer in Germany. I take interfaces that are almost right and make them correct: type, spacing, states, motion, and the performance to carry them. Convenience gives way to correctness.",
 } as const;
 
 export type Link = { label: string; href: string };
