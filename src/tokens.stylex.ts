@@ -7,8 +7,8 @@ const light = "@media (prefers-color-scheme: light)";
  * is three.
  *
  * Columns come from one field grid: fields of 14 units (112px) with gutters of 2 units (16px),
- * seven across the desktop layout (880px). The sidebar takes fields 1 and 2, the text fields 3
- * to 7. In the tables the title takes a field and the descriptor starts on the next one, so every
+ * six across the desktop layout (752px). The sidebar takes fields 1 and 2, the text fields 3
+ * to 6. In the tables the title takes a field and the descriptor starts on the next one, so every
  * left edge on a page lands on a field: the name and sidebar, About and the project names, the
  * descriptors; the dates end on the last field's right edge. 112px fits a project's name at the
  * emphasis weight ("Local Studio" is 99px).
@@ -285,8 +285,8 @@ export const space = stylex.defineVars({
   pageInset: "48px",
   /** Two fields and their gutter. */
   sidebarColumn: `${2 * field + gutter}px`,
-  /** Five fields and their gutters. */
-  contentColumn: `${5 * field + 4 * gutter}px`,
+  /** Four fields and their gutters. */
+  contentColumn: `${4 * field + 3 * gutter}px`,
   /** One gutter: the text starts on the field after the sidebar's. */
   layoutGap: `${gutter}px`,
   /**

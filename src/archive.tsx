@@ -85,10 +85,10 @@ function sortData(work: Work) {
 }
 
 // One work a row in the content column, each at its own ratio. Phones take the viewport less
-// the two 12px gutters, up to the column's 624px, where the page centres on it (`layout.tsx`);
-// tablets the viewport less the sidebar's room; desktop the column's 624px.
+// the two 12px gutters, up to the column's 496px, where the page centres on it (`layout.tsx`);
+// tablets the viewport less the sidebar's room; desktop the column's 496px.
 const workSizes =
-  "(max-width: 767px) min(calc(100vw - 24px), 624px), (max-width: 943px) calc(100vw - 320px), 624px";
+  "(max-width: 767px) min(calc(100vw - 24px), 496px), (max-width: 815px) calc(100vw - 320px), 496px";
 
 /**
  * How a work's image loads: the archive's first image is its largest paint, so it comes first;

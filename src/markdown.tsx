@@ -193,15 +193,15 @@ function Video({ id, fill }: { id: string; fill: boolean }) {
   );
 }
 
-// The case pages' column: five fields, 624px from 944px up (the 880px layout and its 32px
-// margins); between 768px and 943px the viewport less the margins, the sidebar and its gutter.
+// The case pages' column: four fields, 496px from 816px up (the 752px layout and its 32px
+// margins); between 768px and 815px the viewport less the margins, the sidebar and its gutter.
 // Two images in a row share it, less their 24px gap. A banner spans the same fields as the text.
 // Phones (`media.mobile`, to 767px) take the viewport less the two 12px gutters, up to the
-// column's 624px, where the page centres on it (`layout.tsx`).
+// column's 496px, where the page centres on it (`layout.tsx`).
 const singleSizes =
-  "(max-width: 767px) min(calc(100vw - 24px), 624px), (max-width: 943px) calc(100vw - 320px), 624px";
+  "(max-width: 767px) min(calc(100vw - 24px), 496px), (max-width: 815px) calc(100vw - 320px), 496px";
 const gridSizes =
-  "(max-width: 767px) min(calc(100vw - 24px), 624px), (max-width: 943px) calc(50vw - 172px), 300px";
+  "(max-width: 767px) min(calc(100vw - 24px), 496px), (max-width: 815px) calc(50vw - 172px), 236px";
 
 /** The `sizes` of an image alone or one of a row of two. */
 export function sizesFor(grid: boolean): string {
