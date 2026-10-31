@@ -60,9 +60,14 @@ export function align(gapProperty: string): void {
     }
   }
 
-  const list = document.querySelector<HTMLElement>("[data-scroll-list]");
-  list?.parentElement?.style.setProperty(
-    "--list-overflows",
-    list.scrollHeight - list.clientHeight - list.scrollTop > 1 ? "1" : "0",
+  // The up-and-down scroller: the list on phones, the section on dense desktops.
+  const list = [...document.querySelectorAll<HTMLElement>("[data-scroll-list]")].find(
+    (element) => getComputedStyle(element).overflowY === "auto",
   );
+  document
+    .querySelector<HTMLElement>("[data-portfolio]")
+    ?.style.setProperty(
+      "--list-overflows",
+      list !== undefined && list.scrollHeight - list.clientHeight - list.scrollTop > 1 ? "1" : "0",
+    );
 }

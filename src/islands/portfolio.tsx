@@ -17,29 +17,40 @@ import { Figures, ui } from "../ui.tsx";
 export function Portfolio({ more }: { more: number }) {
   const [edges, setEdges] = useState({ top: false, bottom: false });
   const section = useRef<HTMLElement>(null);
+  const list = useRef<HTMLDivElement>(null);
 
   // Browsers with scroll-driven animations tie the edge fades to the scroll position in CSS, so
-  // they are right from the first frame; this fallback only serves the others.
+  // they are right from the first frame; this fallback only serves the others. The up-and-down
+  // scroller is the list on phones, the section on dense desktops.
   useEffect(() => {
-    const element = section.current;
-    if (!element || CSS.supports("animation-timeline: scroll()")) return undefined;
-    const update = () =>
-      setEdges({
-        top: element.scrollTop > 1,
-        bottom: element.scrollHeight - element.clientHeight - element.scrollTop > 1,
-      });
+    if (CSS.supports("animation-timeline: scroll()")) return undefined;
+    const elements = [section.current, list.current].filter((element) => element !== null);
+    const update = () => {
+      const element = elements.find((each) => getComputedStyle(each).overflowY === "auto");
+      setEdges(
+        element === undefined
+          ? { top: false, bottom: false }
+          : {
+              top: element.scrollTop > 1,
+              bottom: element.scrollHeight - element.clientHeight - element.scrollTop > 1,
+            },
+      );
+    };
     update();
     const observer = new ResizeObserver(update);
-    observer.observe(element);
-    element.addEventListener("scroll", update, { passive: true });
+    for (const element of elements) {
+      observer.observe(element);
+      element.addEventListener("scroll", update, { passive: true });
+    }
     return () => {
       observer.disconnect();
-      element.removeEventListener("scroll", update);
+      for (const element of elements) element.removeEventListener("scroll", update);
     };
   }, []);
 
   return (
     <div
+      data-portfolio
       {...stylex.props(
         styles.frame,
         edges.top && styles.fadeTop,
@@ -55,7 +66,7 @@ export function Portfolio({ more }: { more: number }) {
         <h2 {...stylex.props(ui.srOnly)} id="portfolio-title">
           Work
         </h2>
-        <div data-rows {...stylex.props(styles.list)}>
+        <div data-rows data-scroll-list ref={list} {...stylex.props(styles.list)}>
           {groups.map((group, index) => (
             <div key={group} {...stylex.props(styles.group)}>
               <h3
@@ -241,13 +252,11 @@ const styles = stylex.create({
       [media.desktop]: "contents",
       [stylex.when.ancestor("[data-dense]", rootMarker)]: { [media.desktop]: "grid" },
     },
-    // Phones: the table's own columns, each as wide as its widest text, so every descriptor shows
-    // in full and the table scrolls sideways when the screen is narrower.
-    gridTemplateColumns: {
-      default: "subgrid",
-      [media.mobile]: "max-content minmax(max-content, 1fr) max-content",
-    },
-    columnGap: { default: null, [media.mobile]: space.mobileTableGap },
+    // Phones: two scrollers, one axis each, so a drag moves the table one way at a time, never
+    // diagonally: the section scrolls sideways, the list inside it up and down (`list`). The one
+    // column is as wide as the table's widest line, so every descriptor shows in full.
+    gridTemplateColumns: { default: "subgrid", [media.mobile]: "minmax(max-content, 1fr)" },
+    gridTemplateRows: { default: null, [media.mobile]: "minmax(0, 1fr)" },
     gridColumn: "1 / -1",
     gridRow: {
       default: null,
@@ -263,10 +272,12 @@ const styles = stylex.create({
     alignContent: "start",
     overflowY: {
       default: null,
-      [media.mobile]: "auto",
+      [media.mobile]: "hidden",
       [stylex.when.ancestor("[data-dense]", rootMarker)]: { [media.desktop]: "auto" },
     },
     overflowX: { default: null, [media.mobile]: "auto" },
+    // A sideways swipe past either end stops here: it never turns into the browser's Back.
+    overscrollBehaviorX: { default: null, [media.mobile]: "contain" },
     // Phones, as paco.me's lists: the scroller reaches the screen's edges and pads back to the
     // text's, so at rest the table stands where it did; scrolled, rows pass under a fade as wide
     // as each margin instead of being cut at the text's edge.
@@ -283,11 +294,10 @@ const styles = stylex.create({
     scrollbarWidth: "none",
     // No overscroll lock: a pull past the list's top must chain to the page so the browser's
     // pull to refresh stays available.
-    scrollTimeline: "--portfolio y",
+    scrollTimeline: { default: "--portfolio y", [media.mobile]: "none" },
     // One row padding below the last row, as above each row's text.
     paddingBottom: {
       default: null,
-      [media.mobile]: space.portfolioRowPadding,
       [stylex.when.ancestor("[data-dense]", rootMarker)]: {
         [media.desktop]: space.portfolioRowPadding,
       },
@@ -297,7 +307,23 @@ const styles = stylex.create({
   list: {
     display: "grid",
     gridColumn: "1 / -1",
-    gridTemplateColumns: "subgrid",
+    // Phones: the table's own columns, each as wide as its widest text.
+    gridTemplateColumns: {
+      default: "subgrid",
+      [media.mobile]: "max-content minmax(max-content, 1fr) max-content",
+    },
+    columnGap: { default: null, [media.mobile]: space.mobileTableGap },
+    alignContent: "start",
     position: "relative",
+    // Phones: the up-and-down scroller, inside the sideways one (`section`).
+    minHeight: { default: null, [media.mobile]: 0 },
+    overflowY: { default: null, [media.mobile]: "auto" },
+    overflowX: { default: null, [media.mobile]: "hidden" },
+    scrollbarWidth: "none",
+    // No overscroll lock: a pull past the list's top must chain to the page so the browser's
+    // pull to refresh stays available.
+    scrollTimeline: { default: null, [media.mobile]: "--portfolio y" },
+    paddingBottom: { default: null, [media.mobile]: space.portfolioRowPadding },
+    "::-webkit-scrollbar": { display: "none" },
   },
 });
