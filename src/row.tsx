@@ -53,31 +53,33 @@ export function Row({ project, first, home }: { project: Project; first: boolean
       >
         {project.title}
       </Title>
-      <span
-        {...stylex.props(ui.text, descriptorMarker, styles.descriptor)}
-        id={`${id}-descriptor`}
-        data-descriptor
-      >
-        <span {...stylex.props(styles.track)}>
-          {group.$ === "Design" ? group.work : project.descriptor}
-        </span>
-      </span>
-      {group.$ === "Design" ? (
-        <time
-          {...stylex.props(ui.text, styles.cell, styles.date)}
-          id={`${id}-end`}
-          dateTime={project.date}
+      <span {...stylex.props(styles.rest)}>
+        <span
+          {...stylex.props(ui.text, descriptorMarker, styles.descriptor)}
+          id={`${id}-descriptor`}
+          data-descriptor
         >
-          <Figures text={project.date.slice(0, 4)} />
-          <span {...stylex.props(styles.monthDay)}>
-            <Figures text={project.date.slice(4)} />
+          <span {...stylex.props(styles.track)}>
+            {group.$ === "Design" ? group.work : project.descriptor}
           </span>
-        </time>
-      ) : (
-        <span {...stylex.props(ui.text, styles.cell, styles.date)} id={`${id}-end`}>
-          {group.platform}
         </span>
-      )}
+        {group.$ === "Design" ? (
+          <time
+            {...stylex.props(ui.text, styles.cell, styles.date)}
+            id={`${id}-end`}
+            dateTime={project.date}
+          >
+            <Figures text={project.date.slice(0, 4)} />
+            <span {...stylex.props(styles.monthDay)}>
+              <Figures text={project.date.slice(4)} />
+            </span>
+          </time>
+        ) : (
+          <span {...stylex.props(ui.text, styles.cell, styles.date)} id={`${id}-end`}>
+            {group.platform}
+          </span>
+        )}
+      </span>
       <span {...stylex.props(ui.srOnly)} id={`${id}-description`}>
         {project.description}
       </span>
@@ -86,6 +88,19 @@ export function Row({ project, first, home }: { project: Project; first: boolean
 }
 
 const styles = stylex.create({
+  /**
+   * The descriptor and the closing fact. Desktop: no box of its own, so both sit in the table's
+   * columns. Phones: one flex line over both columns, so each descriptor runs up to its own row's
+   * date or platform instead of stopping where the widest one starts.
+   */
+  rest: {
+    display: { default: "contents", [media.mobile]: "flex" },
+    gridColumn: { default: null, [media.mobile]: "2 / -1" },
+    gridRow: { default: null, [media.mobile]: 1 },
+    alignItems: { default: null, [media.mobile]: "baseline" },
+    columnGap: { default: null, [media.mobile]: space.mobileTableGap },
+    minWidth: { default: null, [media.mobile]: 0 },
+  },
   row: {
     display: "grid",
     gridColumn: "1 / -1",
@@ -151,6 +166,8 @@ const styles = stylex.create({
       [media.mobile]: "ellipsis",
       ":is([data-marquee])": { [media.motion]: "clip" },
     },
+    // Phones: fills the line up to the closing fact, which stays on the row's right edge.
+    flexGrow: { default: null, [media.mobile]: 1 },
     // While it scrolls, the text fades at both edges instead of being cut: on the right over the
     // last table gap, on the left over a unit reaching into the gap beside the title, so the
     // text's resting place does not move.
