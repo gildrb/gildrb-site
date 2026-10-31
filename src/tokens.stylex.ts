@@ -255,7 +255,7 @@ export const space = stylex.defineVars({
   /**
    * Desktop: the gap between two groups, from the last line's box to the next group's first line:
    * one empty line on the line interval (`sidebarBaselinePitch`), plus the interval's own gap.
-   * About to the table, Projects to Design, Contact to Links: every baseline stays on one grid.
+   * About to the table, Projects to Work, Contact to Links: every baseline stays on one grid.
    */
   groupGap: "calc(2rem + 2rem - 1.5rem)",
   /** Below the project table on desktop: one sidebar pitch. */

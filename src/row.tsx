@@ -12,7 +12,7 @@ import { Figures, ui, untranslated } from "./ui.tsx";
  * and a fact set right, closing the row on its right edge.
  * - Projects: what it is (`descriptor`) and where it runs (`platform`). No date: what it does
  *   matters, not when it started.
- * - Design: what was made (`work`) and the date.
+ * - Work: what was made (`work`) and the date.
  * Named by what it shows; the full `description` describes it.
  */
 export function Row({ project, first, home }: { project: Project; first: boolean; home: boolean }) {
@@ -46,9 +46,9 @@ export function Row({ project, first, home }: { project: Project; first: boolean
         {project.title}
       </Title>
       <span {...stylex.props(ui.text, styles.descriptor)} id={`${id}-descriptor`}>
-        {group.$ === "Design" ? group.work : project.descriptor}
+        {group.$ === "Work" ? group.work : project.descriptor}
       </span>
-      {group.$ === "Design" ? (
+      {group.$ === "Work" ? (
         <time
           {...stylex.props(ui.text, styles.cell, styles.date)}
           id={`${id}-end`}

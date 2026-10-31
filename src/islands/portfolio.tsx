@@ -7,10 +7,10 @@ import { Figures, ui } from "../ui.tsx";
 
 /**
  * The homepage project table in two groups, each under its label: Projects (software Gil
- * maintains: name and one line), then Design (client work and studies: name, what was made, year).
+ * maintains: name and one line), then Work (client work and studies: name, what was made, year).
  * The label sits where a table header would, with the header's hairline under it; the second
  * label stands two row pitches below the last row before it, so rows stay on the 40px rhythm the
- * sidebar aligns to. The archive closes the Design group: "Archive" in the title column, the
+ * sidebar aligns to. The archive closes the Work group: "Archive" in the title column, the
  * count beside it. Edge fades show while the list scrolls on phones. The row under the pointer or
  * in focus brightens; nothing else appears.
  */
@@ -79,7 +79,7 @@ export function Portfolio({ more }: { more: number }) {
                 .map((project, row) => (
                   <Row key={project.href} project={project} first={row === 0} home />
                 ))}
-              {group === "Design" && (
+              {group === "Work" && (
                 <a {...stylex.props(rowMarker, ui.respond, styles.archive)} href="/all">
                   <span {...stylex.props(ui.text, ui.emphasis, styles.title)}>Archive</span>
                   <span {...stylex.props(ui.text, ui.respond, styles.more)}>
@@ -186,7 +186,7 @@ const styles = stylex.create({
   fadeBottom: { "::after": { opacity: 1 } },
   /**
    * One group: its label and rows on the table's shared columns: the title column, then what
-   * fills the rest; Design sets its full date right, its last figure on the table's edge where the
+   * fills the rest; Work sets its full date right, its last figure on the table's edge where the
    * hairlines end. Client work keeps when it was made; Projects, which are ongoing, show no date
    * but where they run, set right in the same column.
    */
@@ -224,7 +224,7 @@ const styles = stylex.create({
     },
   },
   title: { gridColumn: 1 },
-  /** The Design group's footer: "Archive" in the title column, the count beside it. */
+  /** The Work group's footer: "Archive" in the title column, the count beside it. */
   archive: {
     display: "grid",
     gridColumn: "1 / -1",

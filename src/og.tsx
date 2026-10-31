@@ -227,7 +227,7 @@ function Page({ css }: { css: string }) {
               whiteSpace: "nowrap",
             }}
           >
-            {project.group.$ === "Design" ? project.group.work : project.descriptor}
+            {project.group.$ === "Work" ? project.group.work : project.descriptor}
           </span>
           <span
             style={{
@@ -238,11 +238,7 @@ function Page({ css }: { css: string }) {
               whiteSpace: "nowrap",
             }}
           >
-            {project.group.$ === "Design" ? (
-              <IsoDate text={project.date} />
-            ) : (
-              project.group.platform
-            )}
+            {project.group.$ === "Work" ? <IsoDate text={project.date} /> : project.group.platform}
           </span>
         </div>
       )),
@@ -311,7 +307,7 @@ function Page({ css }: { css: string }) {
           <span style={{ ...text, color: color(colors.secondary), marginTop: pitch }}>Links</span>
           {profiles.map(({ label }) => link(label))}
         </div>
-        {/* The table: Projects, then Design. */}
+        {/* The table: Projects, then Work. */}
         <div
           style={{ display: "flex", flexDirection: "column", width: length(space.contentColumn) }}
         >

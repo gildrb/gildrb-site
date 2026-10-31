@@ -20,7 +20,7 @@ import { versioned } from "./versioned.ts";
 
 const url = (path: string) => `${origin}${path}`;
 
-/** The homepage's two groups, in its order: Projects, then Design. */
+/** The homepage's two groups, in its order: Projects, then Work. */
 const workList = (group: Group["$"]) =>
   projects
     .filter((project) => project.group.$ === group)
@@ -161,11 +161,11 @@ Software ${person.name} makes and maintains.
 
 ${workList("Projects")}
 
-## Design
+## Work
 
 Brand, identity and type work for clients, and studies.
 
-${workList("Design")}
+${workList("Work")}
 
 ## Pages
 
@@ -211,11 +211,11 @@ Software ${person.name} makes and maintains.
 
 ${workList("Projects")}
 
-## Design
+## Work
 
 Brand, identity and type work for clients, and studies.
 
-${workList("Design")}
+${workList("Work")}
 
 ## Links
 

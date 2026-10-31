@@ -68,7 +68,7 @@ describe("project table", () => {
   test("lists maintained projects before design work, whatever their dates", () => {
     const html = page("index.html");
     const at = (text: string) => html.indexOf(text);
-    const order = [">Projects</h3>", ">Heph</h4>", ">Design</h3>", ">Local Studio</h4>"].map(at);
+    const order = [">Projects</h3>", ">Heph</h4>", ">Work</h3>", ">Local Studio</h4>"].map(at);
     for (const index of order) expect(index).toBeGreaterThan(-1);
     expect(order).toEqual(order.toSorted((left, right) => left - right));
   });

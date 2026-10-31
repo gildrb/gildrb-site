@@ -38,14 +38,14 @@ export const contacts: readonly Link[] = [
 /**
  * Which homepage group a row belongs to. Projects are software Gil makes and maintains: the table
  * shows what each is (`descriptor`) and where it runs (`platform`), set right where a date would
- * be; no date. Design is work for clients and older studies: the table shows what was made
+ * be; no date. Work is design for clients and older studies: the table shows what was made
  * (`work`) and the date. The full `description` is every row's link description, for screen
  * readers and agents.
  */
-export type Group = { $: "Projects"; platform: string } | { $: "Design"; work: string };
+export type Group = { $: "Projects"; platform: string } | { $: "Work"; work: string };
 
 /** The homepage's groups, in order. */
-export const groups: readonly Group["$"][] = ["Projects", "Design"];
+export const groups: readonly Group["$"][] = ["Projects", "Work"];
 
 type Row = {
   date: string;
@@ -85,7 +85,7 @@ export const cases: readonly Case[] = [
     name: "Local Studio",
     headline: "Local Studio: brand and website for private AI on your Mac",
     descriptor: "On-device AI for Mac",
-    group: { $: "Design", work: "Brand and website" },
+    group: { $: "Work", work: "Brand and website" },
     repository: null,
     links: [{ label: "Site", href: "https://localstudio.gildrb.com/" }],
     description: "Brand and website for Local Studio, private AI on a Mac.",
@@ -100,7 +100,7 @@ export const cases: readonly Case[] = [
     name: "T3",
     headline: "T3: logomark studies by Gil Rodrigues",
     descriptor: "Coding agent client",
-    group: { $: "Design", work: "Logomark studies" },
+    group: { $: "Work", work: "Logomark studies" },
     repository: null,
     links: [{ label: "X", href: "https://x.com/gildrb_/status/2080990301208952994" }],
     description: "T3 logomark studies: product marks, icons and rejected directions.",
@@ -115,7 +115,7 @@ export const cases: readonly Case[] = [
     name: "Ben Davis",
     headline: "Ben Davis: a db monogram and the davis7.sh website",
     descriptor: "Developer and YouTuber",
-    group: { $: "Design", work: "Logo and website" },
+    group: { $: "Work", work: "Logo and website" },
     repository: null,
     links: [
       { label: "Site", href: "https://davis7.gildrb.com/" },
@@ -165,7 +165,7 @@ export const cases: readonly Case[] = [
     name: "Filen",
     headline: "Filen: identity concept by Gil Rodrigues",
     descriptor: "Encrypted cloud storage",
-    group: { $: "Design", work: "Identity concept" },
+    group: { $: "Work", work: "Identity concept" },
     repository: null,
     links: [{ label: "X", href: "https://x.com/gildrb_/status/2021242178727452998" }],
     description: "Identity concept for Filen: wordmark, app icon and campaign.",
@@ -174,13 +174,13 @@ export const cases: readonly Case[] = [
   },
   {
     slug: "n0thing",
-    listed: false,
+    listed: true,
     date: "2019-11-15",
-    title: "n0thing",
+    title: "Jordan Gilbert",
     name: "Jordan Gilbert",
     headline: "Jordan Gilbert: a pixel wordmark for n0thing",
     descriptor: "Counter-Strike player",
-    group: { $: "Design", work: "Pixel wordmark" },
+    group: { $: "Work", work: "Pixel wordmark" },
     repository: null,
     links: [{ label: "n0thing", href: "https://www.n0thing.gg/" }],
     description:
@@ -196,7 +196,7 @@ export const cases: readonly Case[] = [
     name: "CURVES",
     headline: "CURVES: a free geometric display typeface by Gil Rodrigues",
     descriptor: "Geometric display typeface",
-    group: { $: "Design", work: "Display typeface" },
+    group: { $: "Work", work: "Display typeface" },
     repository: null,
     links: [
       { label: "DaFont", href: "https://www.dafont.com/curves.font" },
@@ -210,11 +210,11 @@ export const cases: readonly Case[] = [
     slug: "ml7",
     listed: true,
     date: "2018-11-13",
-    title: "mL7",
+    title: "Mihai Lupascu",
     name: "Mihai Lupascu",
     headline: "Mihai Lupascu: a compact channel logo by Gil Rodrigues",
     descriptor: "Overwatch streamer",
-    group: { $: "Design", work: "Channel logo" },
+    group: { $: "Work", work: "Channel logo" },
     repository: null,
     links: [{ label: "Twitch", href: "https://www.twitch.tv/ml7support" }],
     description: "Channel logo for Overwatch streamer mL7.",
@@ -350,7 +350,7 @@ const externals: readonly External[] = [];
 export type Project = Row & { href: string; external: boolean };
 
 /**
- * Homepage rows: Projects first, then Design, each newest first. Software Gil maintains comes
+ * Homepage rows: Projects first, then Work, each newest first. Software Gil maintains comes
  * before client work and studies, whatever their dates.
  */
 export const projects: readonly Project[] = [
@@ -368,7 +368,7 @@ function groupRank(group: Group): number {
   switch (group.$) {
     case "Projects":
       return 0;
-    case "Design":
+    case "Work":
       return 1;
     default: {
       const _: never = group;
