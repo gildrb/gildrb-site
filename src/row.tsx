@@ -54,12 +54,7 @@ export function Row({ project, first, home }: { project: Project; first: boolean
         {project.title}
       </Title>
       <span
-        {...stylex.props(
-          ui.text,
-          descriptorMarker,
-          styles.descriptor,
-          group.$ === "Projects" && styles.wideOnPhones,
-        )}
+        {...stylex.props(ui.text, descriptorMarker, styles.descriptor)}
         id={`${id}-descriptor`}
         data-descriptor
       >
@@ -79,10 +74,7 @@ export function Row({ project, first, home }: { project: Project; first: boolean
           </span>
         </time>
       ) : (
-        <span
-          {...stylex.props(ui.text, styles.cell, styles.date, styles.platform)}
-          id={`${id}-end`}
-        >
+        <span {...stylex.props(ui.text, styles.cell, styles.date)} id={`${id}-end`}>
           {group.platform}
         </span>
       )}
@@ -144,10 +136,6 @@ const styles = stylex.create({
    * row's accessible name (`aria-labelledby` reads hidden text) and in `dateTime`.
    */
   monthDay: { display: { default: "inline", [media.mobile]: "none" } },
-  /** Where a project runs: desktop only; on a phone the descriptor takes its room. */
-  platform: { display: { default: "block", [media.mobile]: "none" } },
-  /** Phones: a project's descriptor takes the hidden platform's column too. */
-  wideOnPhones: { gridColumn: { default: 2, [media.mobile]: "2 / -1" } },
   /** The thing named, at the emphasis weight; the descriptor and date beside it stay at the text's. */
   title: { gridColumn: 1, margin: 0, color: colors.primary, fontWeight: typeScale.emphasisWeight },
   descriptor: {

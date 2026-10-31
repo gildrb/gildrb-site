@@ -176,8 +176,8 @@ const styles = stylex.create({
   /**
    * One group: its label and rows on the table's shared columns: the title column, then what
    * fills the rest; Design sets its full date right, its last figure on the table's edge where the
-   * hairlines end. Client work keeps when it was made; Projects, which are ongoing, show no date,
-   * and their descriptor takes the date's column too.
+   * hairlines end. Client work keeps when it was made; Projects, which are ongoing, show no date
+   * but where they run, set right in the same column.
    */
   group: {
     display: "grid",
