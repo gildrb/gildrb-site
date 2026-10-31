@@ -6,9 +6,9 @@ He takes interfaces that are almost right and makes them correct: type, spacing,
 
 His tools show it:
 
-- [Eukhe](https://eukhe.com/): a coding agent and the terminal it lives in. Its site is a read-only Neovim whose core is written in Bend, with every law proven; on a phone it is the same terminal, scrolled by touch.
-- [Archetypon](https://archetypon.gildrb.com/): SVG to optimized SVG, PDF, PNG, WebP, JPEG and ICO, in the browser. No upload.
-- [Elpis](/elpis): the fastest 4-bit Qwen3.8-27B on one RTX 3090. Every speedup is gated on quality.
+- [Eukhe](https://eukhe.com/): eukhe.com, Neovim in the browser, on a proven core.
+- [Archetypon](https://archetypon.gildrb.com/): an SVG export tool, interface and engine, in the browser.
+- [Elpis](/elpis): the fastest 4-bit Qwen3.8-27B on one RTX 3090.
 - [Porthmeus](https://porthmeus.com/): one command, one private HTTPS link to a dev server.
 
 Before the tools came brand, type and identity work for clients: logos, typefaces and websites that shipped. Each project on the [homepage](/) has a page on what he made and how; the [archive](/all) shows all of it at once.

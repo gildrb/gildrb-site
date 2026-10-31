@@ -153,8 +153,7 @@ export const cases: readonly Case[] = [
     group: { $: "Projects", platform: "Linux, RTX 3090" },
     repository: "https://github.com/gildrb/elpis",
     links: [],
-    description:
-      "Inference performance: the fastest 4-bit Qwen3.8-27B on one RTX 3090, every speedup quality gated.",
+    description: "Fastest 4-bit Qwen3.8-27B on one RTX 3090.",
     ogDescription:
       "Qwen3.8-27B on one RTX 3090: 1,221 tok/s prefill, 126 tok/s decode, 262K context, every speedup gated on quality.",
   },
@@ -283,8 +282,7 @@ export const products: readonly Product[] = [
     aliases: ["eukhe.gildrb.com"],
     site: "Own",
     headline: "Eukhe: a coding agent that remembers every chat",
-    description:
-      "Coding agent, its terminal UI and eukhe.com: a read-only Neovim whose Bend core has proven laws.",
+    description: "eukhe.com: Neovim in the browser, on a proven core.",
     repository: "https://github.com/gildrb/eukhe",
     category: "DeveloperApplication",
     operatingSystem: "macOS (Apple Silicon), Linux",
@@ -307,8 +305,7 @@ export const products: readonly Product[] = [
     aliases: [],
     site: "Built",
     headline: "Archetypon: convert SVG to PNG, ICO, WebP, JPEG and PDF in your browser",
-    description:
-      "Interface and engine: SVG to optimized SVG, PDF, PNG, WebP, JPEG and ICO, in the browser.",
+    description: "SVG export tool: interface and engine, in the browser.",
     repository: "https://github.com/gildrb/archetypon",
     category: "DesignApplication",
     operatingSystem: "Any",
@@ -328,8 +325,7 @@ export const products: readonly Product[] = [
     aliases: ["www.porthmeus.com", "poros.gildrb.com"],
     site: "Built",
     headline: "Porthmeus: open your server's dev server on your Mac or phone over Tailscale",
-    description:
-      "CLI and site: one command, one private HTTPS link to a dev server on your tailnet.",
+    description: "One command, one private HTTPS link to a dev server.",
     repository: "https://github.com/gildrb/porthmeus",
     category: "DeveloperApplication",
     operatingSystem: "macOS, Linux",
