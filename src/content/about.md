@@ -6,7 +6,7 @@ I design interfaces and build them to production myself: brand, type, layout and
 
 What that looks like:
 
-- [Eukhe](https://eukhe.com/): eukhe.com, Neovim in the browser on a core with proven laws. Lighthouse 100 in every category, on mobile and desktop.
+- [Eukhe](https://eukhe.com/): eukhe.com, Neovim in the browser on a core with proven laws.
 - [Archetypon](https://archetypon.gildrb.com/): an SVG export tool, interface and engine, in the browser. No upload.
 - [Elpis](/elpis): the fastest 4-bit Qwen3.8-27B on one RTX 3090.
 - [Porthmeus](https://porthmeus.com/): one command, one private HTTPS link to a dev server.
