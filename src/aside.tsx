@@ -53,7 +53,6 @@ export function SourcesLine({ links, style }: { links: readonly Link[]; style?: 
           <a
             {...stylex.props(ui.focusRing, ui.outbound, ui.respond, styles.address)}
             href={href}
-            target="_blank"
             rel="noopener noreferrer"
             aria-label={`${label}: ${destination(href)}`}
           >

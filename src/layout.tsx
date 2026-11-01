@@ -323,7 +323,6 @@ export function Links({ home = false }: { home?: boolean }) {
       <a
         {...stylex.props(ui.quiet, ui.respond, ui.focusRing, styles.link, placement)}
         href={item.href}
-        target="_blank"
         rel={me ? "me noopener noreferrer" : "noopener noreferrer"}
         itemProp={me ? "sameAs" : undefined}
         {...untranslated}

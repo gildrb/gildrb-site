@@ -90,7 +90,7 @@ function Inline({ text }: { text: string }) {
         <code {...stylex.props(ui.mono, ui.codeSurface, ui.edge, styles.code)}>{code}</code>,
       );
     else if (label) {
-      const external = href.startsWith("http") && { target: "_blank", rel: "noopener noreferrer" };
+      const external = href.startsWith("http") && { rel: "noopener noreferrer" };
       nodes.push(
         <a
           {...stylex.props(ui.outbound, styles.link, ui.respond, ui.focusRing)}
