@@ -185,7 +185,12 @@ export const colors = stylex.defineVars({
   bg: { default: pageColor.dark, [light]: pageColor.light },
   primary: { default: "oklch(95% 0.02 85)", [light]: "oklch(21% 0.018 50)" },
   secondary: { default: "oklch(78% 0.035 72)", [light]: "oklch(41% 0.03 55)" },
-  /** One more step down the text ladder: labels, dates, descriptors, quiet links at rest. */
+  /**
+   * The bottom of the text ladder, a rung below tertiary: the labels themselves (About, Contact,
+   * Links, table headers) and other marks that must recede further than any run text does.
+   */
+  quaternary: { default: "oklch(56% 0.05 60)", [light]: "oklch(35% 0.026 54)" },
+  /** Dates, descriptors, quiet links at rest. */
   tertiary: { default: "oklch(67% 0.042 64)", [light]: "oklch(50% 0.036 58)" },
   article: { default: "oklch(88% 0.024 80)", [light]: "oklch(30% 0.022 52)" },
   /** Rules: the page's text at 12% opacity, so they take the tint of whatever is under them. */
