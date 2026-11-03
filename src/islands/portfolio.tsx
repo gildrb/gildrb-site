@@ -237,13 +237,13 @@ const styles = stylex.create({
   title: {
     gridColumn: 1,
     // The archive's title keeps the footer's colour, but dims while another row is lit, as the
-    // rows' own titles do (`row.tsx`).
+    // rows' own titles do (`row.tsx`). The restores nest to beat the dim, as in `row.tsx`.
     color: {
       default: "inherit",
       [stylex.when.ancestor(":hover", listMarker)]: colors.quaternary,
       [stylex.when.ancestor(":hover", rowMarker)]: { [media.hover]: "inherit" },
-      [stylex.when.ancestor(":focus-visible", rowMarker)]: "inherit",
-      [stylex.when.ancestor("[data-selected]", rowMarker)]: "inherit",
+      [stylex.when.ancestor(":focus-visible", rowMarker)]: { [media.desktop]: "inherit" },
+      [stylex.when.ancestor("[data-selected]", rowMarker)]: { [media.desktop]: "inherit" },
     },
   },
   /**
@@ -281,8 +281,8 @@ const styles = stylex.create({
       default: colors.tertiary,
       [stylex.when.ancestor(":hover", listMarker)]: colors.quaternary,
       [stylex.when.ancestor(":hover", rowMarker)]: { [media.hover]: colors.primary },
-      [stylex.when.ancestor(":focus-visible", rowMarker)]: colors.primary,
-      [stylex.when.ancestor("[data-selected]", rowMarker)]: colors.primary,
+      [stylex.when.ancestor(":focus-visible", rowMarker)]: { [media.desktop]: colors.primary },
+      [stylex.when.ancestor("[data-selected]", rowMarker)]: { [media.desktop]: colors.primary },
     },
   },
   section: {

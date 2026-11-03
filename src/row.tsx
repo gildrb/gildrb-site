@@ -122,14 +122,15 @@ const styles = stylex.create({
     display: "block",
     textAlign: "end",
     // The row's colour, inherited — except while a sibling row is lit, when it dims and restores
-    // on its own row's state. The restore conditions carry the row marker, so they match the dim
-    // conditions' shape and the later declaration wins.
+    // on its own row's state. The restores nest in a media condition, which triples the class:
+    // the dim rule ties with them on order (StyleX sorts conditions, not by declaration), so it
+    // would win on its own.
     color: {
       default: "inherit",
       [stylex.when.ancestor(":hover", listMarker)]: colors.quaternary,
       [stylex.when.ancestor(":hover", rowMarker)]: { [media.hover]: "inherit" },
-      [stylex.when.ancestor(":focus-visible", rowMarker)]: "inherit",
-      [stylex.when.ancestor("[data-selected]", rowMarker)]: "inherit",
+      [stylex.when.ancestor(":focus-visible", rowMarker)]: { [media.desktop]: "inherit" },
+      [stylex.when.ancestor("[data-selected]", rowMarker)]: { [media.desktop]: "inherit" },
     },
     paddingInlineEnd: 0,
   },
@@ -139,13 +140,13 @@ const styles = stylex.create({
     margin: 0,
     fontWeight: typeScale.emphasisWeight,
     // The title keeps full contrast except while a sibling is lit, then dims with the row and
-    // restores on its own row's state.
+    // restores on its own row's state; the restores nest to beat the dim, as in `date`.
     color: {
       default: colors.primary,
       [stylex.when.ancestor(":hover", listMarker)]: colors.quaternary,
-      [stylex.when.ancestor(":hover", rowMarker)]: colors.primary,
-      [stylex.when.ancestor(":focus-visible", rowMarker)]: colors.primary,
-      [stylex.when.ancestor("[data-selected]", rowMarker)]: colors.primary,
+      [stylex.when.ancestor(":hover", rowMarker)]: { [media.hover]: colors.primary },
+      [stylex.when.ancestor(":focus-visible", rowMarker)]: { [media.desktop]: colors.primary },
+      [stylex.when.ancestor("[data-selected]", rowMarker)]: { [media.desktop]: colors.primary },
     },
   },
   descriptor: {
@@ -153,13 +154,13 @@ const styles = stylex.create({
     gridRow: { default: 1, [media.mobile]: 2 },
     // The row's own colour (grey, full contrast on its hover or focus), inherited, so the subject
     // fades with the row on leaving; a colour of its own here would switch at once. While a
-    // sibling row is lit it dims, and restores on its own row's state.
+    // sibling row is lit it dims, and restores on its own row's state, as in `date`.
     color: {
       default: "inherit",
       [stylex.when.ancestor(":hover", listMarker)]: colors.quaternary,
       [stylex.when.ancestor(":hover", rowMarker)]: { [media.hover]: "inherit" },
-      [stylex.when.ancestor(":focus-visible", rowMarker)]: "inherit",
-      [stylex.when.ancestor("[data-selected]", rowMarker)]: "inherit",
+      [stylex.when.ancestor(":focus-visible", rowMarker)]: { [media.desktop]: "inherit" },
+      [stylex.when.ancestor("[data-selected]", rowMarker)]: { [media.desktop]: "inherit" },
     },
   },
 });
