@@ -156,7 +156,7 @@ export const typeScale = stylex.defineConsts({
  * <html> and in `theme-color` before any CSS loads, so the first frame and the browser chrome are
  * the page itself.
  */
-export const pageColor = { dark: "oklch(15.5% 0.013 55)", light: "oklch(96.5% 0.012 85)" };
+export const pageColor = { dark: "oklch(15.5% 0.013 55)", light: "oklch(98.5% 0.006 85)" };
 
 /**
  * The forge's palette, sampled from Batoni's "Vulcan" (1750) and Flaxman's gilt Shield of
