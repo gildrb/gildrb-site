@@ -156,7 +156,7 @@ export const typeScale = stylex.defineConsts({
  * <html> and in `theme-color` before any CSS loads, so the first frame and the browser chrome are
  * the page itself.
  */
-export const pageColor = { dark: "oklch(15.5% 0.013 55)", light: "oklch(98.5% 0.006 85)" };
+export const pageColor = { dark: "oklch(15.5% 0.013 55)", light: "oklch(99.5% 0.004 85)" };
 
 /**
  * The forge's palette, sampled from Batoni's "Vulcan" (1750) and Flaxman's gilt Shield of
@@ -168,7 +168,7 @@ export const pageColor = { dark: "oklch(15.5% 0.013 55)", light: "oklch(98.5% 0.
  * So each ladder ramps both ways at once, like firelight: the darker a color, the redder and the
  * more chromatic. Dark: an umber page (hue 55, chroma 0.013), bronze tertiary (hue 64, 0.042),
  * sand secondary (hue 72, 0.035), ivory text (hue 85, 0.02). Light: the same scale read from the
- * other end, ivory paper (hue 85, 0.012) under umber ink (hue 50 to 58, 0.018 to 0.036), held
+ * other end, ivory paper (hue 85, 0.004) under umber ink (hue 50 to 58, 0.018 to 0.036), held
  * lower than the dark ladder's chroma: on paper the same chroma reads as sepia.
  *
  * The text ladder in APCA. Dark, on the page: primary Lc 97, article 82, secondary 63, tertiary
@@ -190,7 +190,7 @@ export const colors = stylex.defineVars({
   article: { default: "oklch(88% 0.024 80)", [light]: "oklch(30% 0.022 52)" },
   /** Rules: the page's text at 12% opacity, so they take the tint of whatever is under them. */
   hairline: { default: "oklch(95% 0.02 85 / 0.12)", [light]: "oklch(21% 0.018 50 / 0.12)" },
-  codeBg: { default: "oklch(21% 0.016 58)", [light]: "oklch(92% 0.018 82)" },
+  codeBg: { default: "oklch(21% 0.016 58)", [light]: "oklch(95% 0.018 82)" },
   /**
    * Depth without shadows, from light (after raycast.com): a surface is lit from above. Its fill
    * runs from `surfaceTop` down to its own color, and `bevel`, a line of light, sits on its top
@@ -198,13 +198,13 @@ export const colors = stylex.defineVars({
    * one step brighter than its surface, with a brighter `keyBevel` on top and `keyBase`, a darker
    * line, under it, so it reads as raised. Nothing casts a shadow onto the page.
    */
-  surfaceTop: { default: "oklch(24% 0.017 60)", [light]: "oklch(94.5% 0.016 82)" },
+  surfaceTop: { default: "oklch(24% 0.017 60)", [light]: "oklch(97.5% 0.016 82)" },
   bevel: { default: "oklch(100% 0 0 / 0.07)", [light]: "oklch(100% 0 0 / 0.75)" },
-  key: { default: "oklch(27% 0.018 62)", [light]: "oklch(97.5% 0.01 85)" },
-  keyHover: { default: "oklch(31% 0.02 64)", [light]: "oklch(99.5% 0.004 85)" },
+  key: { default: "oklch(27% 0.018 62)", [light]: "oklch(99% 0.008 85)" },
+  keyHover: { default: "oklch(31% 0.02 64)", [light]: "oklch(100% 0 0)" },
   keyBevel: { default: "oklch(100% 0 0 / 0.13)", [light]: "oklch(100% 0 0)" },
   keyBase: { default: "oklch(7% 0.012 50 / 0.55)", [light]: "oklch(21% 0.018 50 / 0.16)" },
-  terminalBg: { default: "oklch(18% 0.015 56)", [light]: "oklch(94.5% 0.015 84)" },
+  terminalBg: { default: "oklch(18% 0.015 56)", [light]: "oklch(97.5% 0.015 84)" },
   /**
    * Heph's glass window (`heph.tsx`), the one lifted surface on the site; flat surfaces take a
    * line (`ui.edge`), not a shadow. `glass` is the terminal colour the wallpaper shows through:
@@ -213,7 +213,7 @@ export const colors = stylex.defineVars({
    * the text it went near-black on the light page. `shadow` is the dark under the window, on
    * each theme's own hue rather than pure black, which reads as a hole in a tinted page.
    */
-  glass: { default: "oklch(18% 0.015 56 / 0.62)", [light]: "oklch(94.5% 0.015 84 / 0.82)" },
+  glass: { default: "oklch(18% 0.015 56 / 0.62)", [light]: "oklch(97.5% 0.015 84 / 0.82)" },
   glint: { default: "oklch(100% 0 0)", [light]: "oklch(100% 0 0)" },
   shadow: { default: "oklch(7% 0.012 50)", [light]: "oklch(15% 0.02 50)" },
   /** Muted text on terminal surfaces: 5.6:1 on the dark terminal, 5.2:1 on the light one. */
