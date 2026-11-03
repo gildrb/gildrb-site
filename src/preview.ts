@@ -223,7 +223,7 @@ async function fill(picture: Picture): Promise<boolean> {
       // Split out, as the case page's island is (`client.ts`): the homepage loads it only when idle.
       const { Specimen } = await import("./islands/curves.tsx");
       const draw = (running: boolean) =>
-        render(h(Specimen, { fill: true, font: data.font, square: true, running }), box);
+        render(h(Specimen, { fill: true, cover: true, font: data.font, running }), box);
       // It steps through its glyphs only while it shows (`running`).
       draw(false);
       picture.animate = draw;

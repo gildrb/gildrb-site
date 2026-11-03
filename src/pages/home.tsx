@@ -92,7 +92,6 @@ export function Home({
       title={title}
       head={<Head shareImage={assets.shareImage} />}
       mono={false}
-      home
     >
       <Shell home>
         <Sidebar home label={{ "aria-labelledby": "site-title" }}>
@@ -164,7 +163,6 @@ const styles = stylex.create({
       [media.mobile]: `calc(8 * ${space.unit} - ${space.linkLineHeight} - ${space.touchInset})`,
     },
   },
-  /** Desktop: the About line one line interval below its label (`linkGap`, as in the sidebar). */
   heading: {
     marginBottom: { default: space.sectionContentGap, [media.desktop]: space.linkGap },
   },

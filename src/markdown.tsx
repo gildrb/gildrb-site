@@ -272,8 +272,8 @@ function Figures({
               component={Specimen}
               props={{
                 fill: banner,
+                cover: false,
                 font: versioned("/fonts/curves.woff2"),
-                square: false,
                 running: true,
               }}
             />
@@ -450,8 +450,8 @@ function gap(kind: Kind, previous: Kind | null): Spacing | null {
 }
 
 /**
- * Renders a page's Markdown, every page alike: the title for screen readers (the breadcrumb shows
- * it), then the blocks. The first paragraph is the opening, at full contrast, wherever it stands
+ * Renders a page's Markdown, every page alike: the title for screen readers (the page's name sits
+ * above it), then the blocks. The first paragraph is the opening, at full contrast, wherever it stands
  * (n0thing opens with an image and a part). `codeLine` (the source code) follows it, then `tool`
  * (Archetypon's converter), then the rest; `sourcesLine` (where else the work lives) ends the
  * page. `eager` gives the first image high fetch priority. `reading` (a page with contents): the
@@ -679,7 +679,6 @@ export const styles = stylex.create({
       [breakpoints.desktop]: `round(down, min(calc(100cqi * 3 / 4), calc(100svh - 240px)), ${space.unit})`,
     },
     overflow: "hidden",
-    borderRadius: space.radius,
   },
   /** A banner's frame: the homepage table's hairline, over the artwork. */
   frame: {
@@ -688,7 +687,6 @@ export const styles = stylex.create({
       content: '""',
       position: "absolute",
       inset: 0,
-      borderRadius: "inherit",
       boxShadow: `inset 0 0 0 1px ${colors.hairline}`,
       pointerEvents: "none",
     },
@@ -710,12 +708,11 @@ export const styles = stylex.create({
     },
     objectFit: "contain",
   },
-  /** Every image and recording takes the surface corner; `zoom.ts` carries it into the enlargement. */
+  /** Every image and recording: rectangular, as the homepage's previews (`preview.ts`). */
   image: {
     display: "block",
     width: "100%",
     height: "auto",
-    borderRadius: space.radius,
     userSelect: "none",
     WebkitUserDrag: "none",
   },
@@ -736,7 +733,6 @@ export const styles = stylex.create({
   zoom: {
     display: "block",
     width: "100%",
-    borderRadius: space.radius,
     cursor: { default: "auto", [breakpoints.desktop]: "zoom-in" },
   },
   mark: { width: "88%" },

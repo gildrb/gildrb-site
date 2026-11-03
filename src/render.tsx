@@ -73,17 +73,19 @@ const html = (page: VNode) =>
   )}\n`;
 
 /**
- * The homepage rows with a picture to preview: each page's lead image, recording or live demo;
- * for a project with no page here, the picture `media.ts` keeps for its preview.
+ * The homepage rows with a picture to preview: the Work pages' lead image, recording or live
+ * demo. The Projects section previews nothing yet (`home.tsx`).
  */
-const previews: Preview[] = projects.flatMap(({ href, slug }) => {
-  if (slug === null) return [];
-  const body = markdown[slug];
-  const id =
-    (body === undefined ? undefined : leadOf(body, livePreviews)) ??
-    Object.keys(media).find((key) => media[key]?.preview === slug);
-  return id === undefined ? [] : [{ href, id }];
-});
+const previews: Preview[] = projects
+  .filter(({ group }) => group.$ === "Work")
+  .flatMap(({ href, slug }) => {
+    if (slug === null) return [];
+    const body = markdown[slug];
+    const id =
+      (body === undefined ? undefined : leadOf(body, livePreviews)) ??
+      Object.keys(media).find((key) => media[key]?.preview === slug);
+    return id === undefined ? [] : [{ href, id }];
+  });
 
 /** Every generated file of the site, keyed by its path in the output directory. */
 export function render(assets: Assets): Record<string, string> {

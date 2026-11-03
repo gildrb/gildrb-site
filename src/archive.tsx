@@ -198,8 +198,7 @@ const styles = stylex.create({
    * A work at its own ratio: nothing crops it to a cell, the column's width sets its size and a
    * taller work simply runs further down the page. Its height is rounded to the nearest unit
    * (`--ratio`, set per work), cropping at most half a unit, so the caption and every work below
-   * stay on the baseline grid. The corner, `space.radius`, is the enlargement's too (`zoom.ts`),
-   * which opens from the work's place in the stream.
+   * stay on the baseline grid.
    */
   frame: { display: "block", width: "100%", containerType: "inline-size" },
   /** A centred mark: the button is narrower than the column, so it centres itself. */
@@ -210,7 +209,6 @@ const styles = stylex.create({
     width: "100%",
     height: `round(nearest, calc(100cqi * var(--ratio)), ${space.unit})`,
     objectFit: "cover",
-    borderRadius: space.radius,
     userSelect: "none",
     WebkitUserDrag: "none",
   },

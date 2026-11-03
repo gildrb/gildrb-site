@@ -20,6 +20,9 @@ import {
 import { type Style, ui, untranslated } from "./ui.tsx";
 import { versioned } from "./versioned.ts";
 
+// The signature's year, the build's own.
+const year = new Date().getFullYear();
+
 export type Assets = {
   script: string;
   css: string;
@@ -90,7 +93,7 @@ const globalCss = [
 ].join("\n");
 
 // Also exposed for the font gate, which realigns with the final font before revealing.
-const alignScript = `window.__align=()=>(${align.toString()})(${scriptJson(space.linkGap.slice(4, -1))});window.__align()`;
+const alignScript = `window.__align=()=>(${align.toString()})();window.__align()`;
 // The scrollbar must answer the first frame of scrolling, not the island script's module graph.
 const scrollbarScript = `(${pageScrollbar.toString()})()`;
 
@@ -237,6 +240,9 @@ export function Sidebar({
         <span data-nosnippet>Skip to content</span>
       </a>
       {children}
+      <p {...stylex.props(ui.label, styles.signature)}>
+        © {year} {person.name}
+      </p>
     </aside>
   );
 }
@@ -253,20 +259,25 @@ export function Main({ home = false, children }: { home?: boolean; children: Com
           `display: contents`; this marker can, and being out of flow it takes no grid cell. */}
       <span {...stylex.props(styles.skipTarget)} id="content" tabIndex={-1} />
       {children}
+      {!home && (
+        <p {...stylex.props(ui.label, styles.signatureMobile)}>
+          © {year} {person.name}
+        </p>
+      )}
     </main>
   );
 }
 
 /**
- * Site name, or on inner pages a breadcrumb back to it: the name in grey on top, the page below it in full contrast. The name links to gildrb.com by its full
- * URL: product pages live on their own hosts, where `/` is the product page itself. A page with no
- * heading of its own (the archive) makes the breadcrumb its `<h1>`. On the homepage, phones make
- * the name a button that shows and hides Contact and Links (`links.ts`).
+ * The site's name: on the homepage the `<h1>` with the phone toggle; on inner pages the same name
+ * in grey, linking home. On phones the bar carries the page on the right; on other sizes the
+ * page's own name sits at the top of the content (`case.tsx`), in the same type as here. The name
+ * links to gildrb.com by its full URL: product pages live on their own hosts, where `/` is the
+ * product page itself.
  */
-export function Name({ current, heading = false }: { current?: string; heading?: boolean }) {
-  const Tag = heading ? "h1" : "p";
+export function Name({ current }: { current?: string }) {
   return current ? (
-    <Tag {...stylex.props(ui.heading, styles.name, styles.caseName)}>
+    <p {...stylex.props(ui.heading, styles.name, styles.caseName)}>
       <a
         {...stylex.props(ui.target, ui.focusRing, ui.respond, styles.home)}
         href={`${origin}/`}
@@ -274,10 +285,9 @@ export function Name({ current, heading = false }: { current?: string; heading?:
       >
         Gil Rodrigues
       </a>
-      <a {...stylex.props(ui.target, ui.focusRing, styles.current)} href="#top">
-        {current}
-      </a>
-    </Tag>
+      {/* Phones: the bar carries the page on the right, beside the pinned name. */}
+      <span {...stylex.props(styles.mobilePage)}>{current}</span>
+    </p>
   ) : (
     <h1
       {...stylex.props(ui.heading, styles.name, styles.homeName)}
@@ -385,7 +395,8 @@ const styles = stylex.create({
   body: {
     // Held hidden by the font gate until Inter is ready; see `fontGate`.
     visibility: "var(--first-paint, visible)",
-    backgroundColor: colors.bg,
+    // No background: the canvas's comes from <html>, and the grid (`grid.ts`) lies under the
+    // body's paint, so any fill here would cover it.
     color: colors.primary,
     fontFeatureSettings: fontFeatures.interface,
     fontWeight: typeScale.textWeight,
@@ -422,29 +433,6 @@ const styles = stylex.create({
     margin: "0 auto",
     minHeight: { default: "100vh", [media.mobile]: "auto" },
     gap: { default: space.layoutGap, [media.mobile]: 0 },
-    // Desktop, every page: a hairline across the viewport where Contact and the lists start (8px
-    // grid: 128px), and one down the viewport left of the content column. Fixed, so
-    // the cross stays put across pages and while the page scrolls.
-    "::before": {
-      content: "''",
-      display: { default: "none", [media.desktop]: "block" },
-      position: "fixed",
-      insetInline: 0,
-      top: `calc(${space.pageInset} + 10 * ${space.unit})`,
-      height: 1,
-      backgroundColor: colors.hairline,
-      pointerEvents: "none",
-    },
-    "::after": {
-      content: "''",
-      display: { default: "none", [media.desktop]: "block" },
-      position: "fixed",
-      insetBlock: 0,
-      left: `calc(50% - (${space.sidebarColumn} + ${space.layoutGap} + ${space.contentColumn}) / 2 + ${space.sidebarColumn} + ${space.layoutGap} - 4 * ${space.unit})`,
-      width: 1,
-      backgroundColor: colors.hairline,
-      pointerEvents: "none",
-    },
   },
   /**
    * Phones: the page ends a section gap below its last row, and clears Safari's bottom bar,
@@ -461,11 +449,11 @@ const styles = stylex.create({
     // homepage previews a row's picture (`home.tsx`).
     gridTemplateRows: {
       default: null,
-      [media.desktop]: "auto auto 1fr",
+      [media.desktop]: "auto auto 1fr auto",
       [media.mobile]: "auto auto auto minmax(0, 1fr)",
       // Dense: like on phones, the page holds to the viewport and the project list scrolls. The
       // list's row still grows to fit the sidebar links, so those are never cut off.
-      [stylex.when.ancestor("[data-dense]", rootMarker)]: { [media.desktop]: "auto 1fr auto" },
+      [stylex.when.ancestor("[data-dense]", rootMarker)]: { [media.desktop]: "auto 1fr auto auto" },
     },
     rowGap: 0,
     paddingBlock: { default: null, [media.desktop]: space.pageInset },
@@ -490,7 +478,7 @@ const styles = stylex.create({
   homeColumn: {
     position: { default: null, [media.desktop]: "static" },
     display: { default: null, [media.desktop]: "grid", [media.mobile]: "contents" },
-    gridRow: { default: null, [media.desktop]: "1 / 4" },
+    gridRow: { default: null, [media.desktop]: "1 / 5" },
     gridTemplateRows: { default: null, [media.desktop]: "subgrid" },
     height: { default: null, [media.desktop]: "auto" },
     minHeight: { default: null, [media.desktop]: 0 },
@@ -521,11 +509,10 @@ const styles = stylex.create({
     clipPath: { default: "inset(50%)", ":focus-visible": "none" },
   },
   homeContent: { gridColumn: { default: null, [media.desktop]: 2 } },
-  /** Case pages' text: `ui.text`, so it follows the reader's font size from tablets up. */
+  /** Case pages' text: `ui.text`, so it follows the reader's font size from tablets up. The
+   *  page's name (`case.tsx`) opens it at the page's inset, on the name's row. */
   caseContent: {
     minHeight: "100vh",
-    // Desktop: the case starts below the hairline, on the row where Contact starts.
-    paddingTop: { default: null, [media.desktop]: `calc(18 * ${space.unit})` },
   },
   name: {
     lineHeight: space.linkLineHeight,
@@ -571,19 +558,45 @@ const styles = stylex.create({
     position: "absolute",
     inset: 0,
   },
+  /**
+   * The inner pages' name block, on the homepage's baseline: as tall as the homepage's About
+   * section (`--desktop-intro-height`, `align.ts`), so Contact starts on the same line on every
+   * page.
+   */
   caseName: {
     display: "flex",
-    flexDirection: "column",
-    alignItems: "start",
+    flexDirection: { default: "column", [media.mobile]: "row" },
+    alignItems: { default: "start", [media.mobile]: "baseline" },
+    justifyContent: { default: null, [media.mobile]: "space-between" },
+    width: { default: null, [media.mobile]: "100%" },
     whiteSpace: "nowrap",
-    // Desktop: the page's title one line interval under the name, as the About line under its
-    // label on the homepage, so both columns keep one baseline grid on every page.
-    rowGap: { default: null, [media.desktop]: space.linkGap },
     minHeight: {
       default: null,
       [media.desktop]: `var(--desktop-intro-height, calc(${space.linkLineHeight} * 2 + ${space.linkGap}))`,
       [media.mobile]: 0,
     },
+    // The breadcrumb's page name is gone; the block keeps its line, the gap and the margin, so
+    // Contact stays on the row it had when the name carried a page under it.
+    paddingBottom: { default: null, [media.desktop]: space.linkGap },
+  },
+  /** Phones: the page's name in the pinned bar, right (`Name`). */
+  mobilePage: {
+    display: { default: "none", [media.mobile]: "block" },
+    color: colors.primary,
+  },
+  /** The signature: the sidebar's foot on desktop; phones put theirs at the page's end. */
+  signature: {
+    display: { default: "none", [media.desktop]: "block" },
+    gridRow: { default: null, [media.desktop]: 4 },
+    margin: 0,
+    marginTop: { default: null, [media.desktop]: "auto" },
+  },
+  signatureMobile: {
+    display: { default: "block", [media.desktop]: "none" },
+    // Phones: last in the flow, under the article and the next projects.
+    order: { default: null, [media.mobile]: 6 },
+    margin: 0,
+    paddingTop: space.sectionGap,
   },
   /**
    * The parent: the same name, in the same type and place as on the homepage, so only its color
@@ -597,7 +610,6 @@ const styles = stylex.create({
     },
     textDecoration: "none",
   },
-  current: { color: colors.primary, textDecoration: "none" },
   desktopOnly: { display: { default: "contents", [media.mobile]: "none" } },
   links: {
     display: "flex",

@@ -1,6 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 import { useId } from "preact/hooks";
-import type { Project } from "./site.ts";
+import { formatDate, type Project } from "./site.ts";
 import { colors, media, rowMarker, space, typeScale } from "./tokens.stylex.ts";
 import { Figures, ui, untranslated } from "./ui.tsx";
 
@@ -54,7 +54,7 @@ export function Row({ project, first, home }: { project: Project; first: boolean
           id={`${id}-end`}
           dateTime={project.date}
         >
-          <Figures text={project.date} />
+          <Figures text={formatDate(project.date)} />
         </time>
       ) : (
         <span {...stylex.props(ui.text, styles.cell, styles.date)} id={`${id}-end`}>

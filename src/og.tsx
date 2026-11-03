@@ -2,8 +2,8 @@ import { readFileSync } from "node:fs";
 import { Resvg } from "@resvg/resvg-js";
 import satori from "satori";
 import { decompress } from "wawoff2";
-import { contacts, email, groups, person, profiles, projects } from "./site.ts";
-import { colors, figureUnits, space, typeScale } from "./tokens.stylex.ts";
+import { contacts, email, formatDate, groups, person, profiles, projects } from "./site.ts";
+import { colors, space, typeScale } from "./tokens.stylex.ts";
 
 /**
  * The link-preview image: the desktop homepage as it first appears, drawn at build time. The
@@ -100,52 +100,6 @@ function srgb(color: string): string {
   return `rgba(${red}, ${green}, ${blue}, ${opacity})`;
 }
 
-function units(value: string): number {
-  const number = Number(value);
-  if (Number.isNaN(number)) throw new Error(`Not a number of font units: ${value}`);
-  return number;
-}
-
-/** Font units of the figures' font as `em`. */
-function figureEm(value: string): string {
-  return `${units(value) / units(figureUnits.unitsPerEm)}em`;
-}
-
-/** A date spaced as `Figures` spaces it on the page: tabular cells, tracked; hyphens adjusted. */
-function IsoDate({ text }: { text: string }) {
-  const characters = text.match(/[\d-]/g) ?? [];
-  if (characters.join("") !== text) throw new Error(`Not an ISO date: ${text}`);
-  return (
-    <div style={{ display: "flex" }}>
-      {characters.map((character, index) =>
-        character === "-" ? (
-          <span
-            key={index}
-            style={{
-              marginLeft: figureEm(figureUnits.beforeHyphen),
-              marginRight: figureEm(figureUnits.afterHyphen),
-            }}
-          >
-            -
-          </span>
-        ) : (
-          <span
-            key={index}
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              width: figureEm(figureUnits.tabular),
-              marginRight: figureEm(figureUnits.digit),
-            }}
-          >
-            {character}
-          </span>
-        ),
-      )}
-    </div>
-  );
-}
-
 function Page({ css }: { css: string }) {
   const token = tokens(css);
   const length = (value: string) => px(token(value));
@@ -238,7 +192,7 @@ function Page({ css }: { css: string }) {
               whiteSpace: "nowrap",
             }}
           >
-            {project.group.$ === "Work" ? <IsoDate text={project.date} /> : project.group.platform}
+            {project.group.$ === "Work" ? formatDate(project.date) : project.group.platform}
           </span>
         </div>
       )),

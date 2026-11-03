@@ -1,6 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 import { useEffect, useRef, useState } from "preact/hooks";
-import { colors, media, space } from "../tokens.stylex.ts";
+import { colors, media } from "../tokens.stylex.ts";
 
 type Player = { goToAndStop(frame: number, isFrame: boolean): void; destroy(): void };
 type Lottie = { loadAnimation(options: Record<string, unknown>): Player };
@@ -179,14 +179,11 @@ const styles = stylex.create({
     overflow: "hidden",
     containerType: "size",
     backgroundColor: colors.bg,
-    // The case pages' surface corner, as every banner (`styles.window` in markdown.tsx).
-    borderRadius: space.radius,
     // The banner's frame: the hairline of the homepage table's rows, drawn over the artwork.
     "::after": {
       content: '""',
       position: "absolute",
       inset: 0,
-      borderRadius: "inherit",
       boxShadow: `inset 0 0 0 1px ${colors.hairline}`,
       pointerEvents: "none",
     },

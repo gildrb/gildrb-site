@@ -290,11 +290,11 @@ export const space = stylex.defineVars({
   /** One gutter: the text starts on the field after the sidebar's. */
   layoutGap: `${gutter}px`,
   /**
-   * One unit: the corner of every surface: archive tiles, case images and banners (the demos'
-   * frames too), code blocks, the shell block and Archetypon's previews. One corner, so the
-   * surfaces read as one family. Inline code takes half (`calc(radius / 2)`): a chip at text size,
-   * which a whole unit would round into a pill. Heph's window keeps macOS's own corner, as it
-   * keeps macOS's lights (`heph.tsx`).
+   * One unit: the corner of the code surfaces: code, keycaps, the shell block and Archetypon's
+   * previews. Artwork stands square-cornered, as the homepage's previews (`markdown.tsx`,
+   * `archive.tsx`). Inline code takes half (`calc(radius / 2)`): a chip at text size, which a
+   * whole unit would round into a pill. Heph's window keeps macOS's own corner, as it keeps
+   * macOS's lights (`heph.tsx`).
    */
   radius: `${unit}px`,
   tileGap: `${4 * unit}px`,

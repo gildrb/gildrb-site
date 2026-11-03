@@ -27,7 +27,8 @@ import {
   type Project,
   projects,
 } from "../site.ts";
-import { media, space } from "../tokens.stylex.ts";
+import { colors, media, space } from "../tokens.stylex.ts";
+import { ui } from "../ui.tsx";
 import { versioned } from "../versioned.ts";
 
 const monoBlocks = (markdown: string) =>
@@ -68,10 +69,11 @@ function Frame({
   current: string;
   head: preact.ComponentChildren;
   mono: boolean;
-  /** The archive page makes the breadcrumb its `<h1>`. */
+  /** The archive page makes the page's name its `<h1>`. */
   heading?: boolean;
   children: preact.ComponentChildren;
 }) {
+  const Title = heading ? "h1" : "p";
   return (
     <Document
       assets={assets}
@@ -103,10 +105,13 @@ function Frame({
             "aria-label": `${current} navigation`,
           }}
         >
-          <Name current={current} heading={heading} />
+          <Name current={current} />
           <PageLinks />
         </Sidebar>
-        <Main>{children}</Main>
+        <Main>
+          <Title {...stylex.props(ui.heading, styles.pageTitle)}>{current}</Title>
+          {children}
+        </Main>
       </Shell>
     </Document>
   );
@@ -288,6 +293,18 @@ export function AllPage({ assets, work }: { assets: Assets; work: readonly Work[
 
 const styles = stylex.create({
   column: { width: `min(100%, ${space.contentColumn})`, marginInline: "auto" },
+  /** The page's name at the top of the content: the name's size, on the name's row. */
+  pageTitle: {
+    color: colors.primary,
+    textDecoration: "none",
+    lineHeight: space.linkLineHeight,
+    // The article keeps its start row below: the one where Contact starts (`layout.tsx`).
+    display: { default: "block", [media.mobile]: "none" },
+    marginBottom: {
+      default: space.sectionContentGap,
+      [media.desktop]: `calc(9 * ${space.unit})`,
+    },
+  },
   phoneItem: {
     gridColumn: { default: null, [media.mobile]: "1 / -1" },
     order: { default: null, [media.mobile]: 5 },

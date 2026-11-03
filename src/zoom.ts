@@ -205,7 +205,7 @@ function enlarge(button: HTMLButtonElement, over?: Zoomed): boolean {
   const backdrop = over?.backdrop ?? document.createElement("div");
   if (!over) {
     backdrop.style.cssText = `position:fixed;inset:0;z-index:1000;cursor:zoom-out;opacity:0;background:${
-      getComputedStyle(document.body).backgroundColor
+      getComputedStyle(document.documentElement).backgroundColor
     }`;
   }
 

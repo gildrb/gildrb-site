@@ -1,6 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 import { useEffect, useRef, useState } from "preact/hooks";
-import { colors, media, space } from "../tokens.stylex.ts";
+import { colors, media } from "../tokens.stylex.ts";
 import { ui } from "../ui.tsx";
 
 /**
@@ -178,18 +178,19 @@ const lines = [
  * the chosen glyph on its cap height, baseline and descender, with its advance width, name and
  * code. Pointing at a cell, the arrow keys or typing a character choose a glyph. Until then
  * the specimen steps through the set by itself while it is on screen and `running`. With
- * `fill`, the panel fills the banner window of the case page; otherwise it keeps 4:3. `square`
- * drops the banner's corner (the homepage preview, `preview.ts`).
+ * `fill`, the panel fills the banner window of the case page; otherwise it keeps 4:3. `cover`
+ * scales the panel past the window to fill it whole, cropped from the bottom (the homepage
+ * preview, `preview.ts`).
  */
 export function Specimen({
   fill,
   font,
-  square,
+  cover,
   running,
 }: {
   fill: boolean;
   font: string;
-  square: boolean;
+  cover: boolean;
   running: boolean;
 }) {
   const frame = useRef<HTMLDivElement>(null);
@@ -251,7 +252,10 @@ export function Specimen({
   const left = view.width / 2 - (glyph.width * scale) / 2;
   const shown = character(glyph);
   return (
-    <div ref={frame} {...stylex.props(styles.frame, fill && styles.fill, square && styles.square)}>
+    <div
+      ref={frame}
+      {...stylex.props(styles.frame, fill && styles.fill, cover && styles.coverFrame)}
+    >
       <style
         dangerouslySetInnerHTML={{
           // The ascent is set so a line box centres the cap height: the cells need no nudging.
@@ -264,7 +268,7 @@ export function Specimen({
         aria-label="Every CURVES glyph"
         aria-activedescendant={`curves-glyph-${chosen}`}
         onKeyDown={keys}
-        {...stylex.props(ui.focusRing, styles.panel)}
+        {...stylex.props(ui.focusRing, styles.panel, cover && styles.coverPanel)}
       >
         <div {...stylex.props(styles.showcase)} aria-hidden="true">
           <svg viewBox={`0 0 ${view.width} ${view.height}`} {...stylex.props(styles.drawing)}>
@@ -371,22 +375,19 @@ const styles = stylex.create({
     display: "grid",
     placeItems: "center",
     backgroundColor: colors.bg,
-    // The case pages' surface corner, as every banner (`styles.window` in markdown.tsx).
-    borderRadius: space.radius,
     // The banner's frame: the hairline of the homepage table's rows, drawn over the artwork.
     "::after": {
       content: '""',
       position: "absolute",
       inset: 0,
-      borderRadius: "inherit",
       boxShadow: `inset 0 0 0 1px ${colors.hairline}`,
       pointerEvents: "none",
     },
   },
   // Fills the case pages' banner window on desktop (`styles.window` in markdown.tsx).
   fill: { height: { default: null, [media.desktop]: "100%" } },
-  // The homepage preview: square-cornered, as everything on the homepage (the frame's hairline follows).
-  square: { borderRadius: 0 },
+  // Covering the window: the panel stands on its top edge, so the crop takes the bottom rows.
+  coverFrame: { placeItems: "start center" },
   // 4:3 inside whatever window the banner leaves: as wide as fits, never cropped.
   panel: {
     width: "min(100cqw, calc(100cqh * 4 / 3))",
@@ -399,6 +400,11 @@ const styles = stylex.create({
     userSelect: "none",
     touchAction: "pan-y",
     cursor: "default",
+  },
+  // The least 4:3 box that covers the window: full width, running past its bottom edge.
+  coverPanel: {
+    width: "max(100cqw, calc(100cqh * 4 / 3))",
+    height: "max(100cqh, calc(100cqw * 3 / 4))",
   },
   showcase: {
     position: "relative",

@@ -27,6 +27,16 @@ export const profiles: readonly Link[] = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/gildrb/" },
 ];
 
+/** The date as people read it: "November 13, 2018". Parsed in UTC, so the day never shifts. */
+export function formatDate(date: string): string {
+  return new Intl.DateTimeFormat("en-US", {
+    day: "numeric",
+    month: "long",
+    timeZone: "UTC",
+    year: "numeric",
+  }).format(new Date(`${date}T00:00:00Z`));
+}
+
 export const contacts: readonly Link[] = [
   {
     label: "Signal",

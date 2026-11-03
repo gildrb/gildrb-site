@@ -9,7 +9,7 @@
  *
  * Self-contained on purpose: `alignScript` inlines its source at the end of `<body>`.
  */
-export function align(gapProperty: string): void {
+export function align(): void {
   const body = document.body;
   const content = document.querySelector("main");
   const sidebarLinks = document.querySelector("aside nav");
@@ -29,7 +29,8 @@ export function align(gapProperty: string): void {
         line = next;
       }
     }
-    const gap = Number.parseFloat(style.getPropertyValue(gapProperty));
+    // The one-line gap under the intro (`space.linkGap`, half a rem), in pixels.
+    const gap = Number.parseFloat(getComputedStyle(document.documentElement).fontSize) / 2;
     body.style.setProperty(
       "--desktop-intro-height",
       `${(lines + 1) * Number.parseFloat(style.lineHeight) + gap}px`,

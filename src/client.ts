@@ -4,9 +4,7 @@ import type { Islands } from "./island.tsx";
 import { Email } from "./islands/email.tsx";
 import { Portfolio } from "./islands/portfolio.tsx";
 import { compareRows, origin, products, type SortDirection, type SortKey } from "./site.ts";
-import { space } from "./tokens.stylex.ts";
 import { loadPagesAhead } from "./ahead.ts";
-import { enableGrid } from "./grid.ts";
 import { enableKeys } from "./keys.ts";
 import { toggleLinks } from "./links.ts";
 import { enablePreview } from "./preview.ts";
@@ -17,7 +15,6 @@ toggleLinks();
 enableZoom();
 autoplayVideos();
 loadPagesAhead();
-enableGrid();
 // After `enableZoom`: an enlarged artwork takes Escape first, before it can mean "go home".
 enableKeys();
 enablePreview();
@@ -101,7 +98,7 @@ requestAnimationFrame(() => {
 });
 
 // The first alignment already ran inline before the first paint; keep it current afterwards.
-const updateLayout = () => align(space.linkGap.slice(4, -1));
+const updateLayout = () => align();
 const resized = new ResizeObserver(() => setTimeout(updateLayout, 0));
 for (const target of [
   document.querySelector("main"),
