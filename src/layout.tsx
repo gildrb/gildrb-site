@@ -259,9 +259,13 @@ export function Main({ home = false, children }: { home?: boolean; children: Com
           `display: contents`; this marker can, and being out of flow it takes no grid cell. */}
       <span {...stylex.props(styles.skipTarget)} id="content" tabIndex={-1} />
       {children}
-      <p {...stylex.props(ui.label, styles.signatureMobile, home && styles.signatureHome)}>
-        © {year} {person.name}
-      </p>
+      {/* Phones: the signature follows the page's content. The homepage keeps its own, in the
+          table's list (`portfolio.tsx`). */}
+      {!home && (
+        <p {...stylex.props(ui.label, styles.signatureMobile)}>
+          © {year} {person.name}
+        </p>
+      )}
     </main>
   );
 }
@@ -451,7 +455,7 @@ const styles = stylex.create({
     gridTemplateRows: {
       default: null,
       [media.desktop]: "auto auto 1fr auto",
-      [media.mobile]: "auto auto auto minmax(0, 1fr) auto",
+      [media.mobile]: "auto auto auto minmax(0, 1fr)",
       // Dense: like on phones, the page holds to the viewport and the project list scrolls. The
       // list's row still grows to fit the sidebar links, so those are never cut off.
       [stylex.when.ancestor("[data-dense]", rootMarker)]: { [media.desktop]: "auto 1fr auto auto" },
@@ -602,10 +606,6 @@ const styles = stylex.create({
     order: { default: null, [media.mobile]: 6 },
     margin: 0,
     paddingTop: space.sectionGap,
-  },
-  /** Phones: the homepage's signature on its own row, under the table (`homeLayout`). */
-  signatureHome: {
-    gridRow: { default: null, [media.mobile]: 5 },
   },
   /**
    * The parent: the same name, in the same type and place as on the homepage, so only its color

@@ -1,10 +1,12 @@
 import * as stylex from "@stylexjs/stylex";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { Row } from "../row.tsx";
-import { groups, projects } from "../site.ts";
+import { groups, person, projects } from "../site.ts";
 import { colors, media, rootMarker, rowMarker, space } from "../tokens.stylex.ts";
 import { Figures, ui } from "../ui.tsx";
 
+// The signature's year, the build's own.
+const year = new Date().getFullYear();
 /**
  * The homepage project table in two groups, each under its label: Projects (software Gil
  * maintains: name and one line), then Work (client work and studies: name, what was made, year).
@@ -80,12 +82,19 @@ export function Portfolio({ more }: { more: number }) {
                   <Row key={project.href} project={project} first={row === 0} home />
                 ))}
               {group === "Work" && (
-                <a {...stylex.props(rowMarker, ui.respond, styles.archive)} href="/all">
-                  <span {...stylex.props(ui.text, ui.emphasis, styles.title)}>Archive</span>
-                  <span {...stylex.props(ui.text, ui.respond, styles.more)}>
-                    <Figures text={String(more)} /> more
-                  </span>
-                </a>
+                <>
+                  <a {...stylex.props(rowMarker, ui.respond, styles.archive)} href="/all">
+                    <span {...stylex.props(ui.text, ui.emphasis, styles.title)}>Archive</span>
+                    <span {...stylex.props(ui.text, ui.respond, styles.more)}>
+                      <Figures text={String(more)} /> more
+                    </span>
+                  </a>
+                  {/* Phones: the signature as the list's last line, on the label rhythm
+                      (`laterLabel`): one pitch below Archive. */}
+                  <p {...stylex.props(ui.label, styles.signature)}>
+                    © {year} {person.name}
+                  </p>
+                </>
               )}
             </div>
           ))}
@@ -224,6 +233,17 @@ const styles = stylex.create({
     },
   },
   title: { gridColumn: 1 },
+  /**
+   * Phones: the signature as the list's last line — on the label's own box (`paddingBlock` a
+   * touch inset), so it stands below Archive exactly where the Work label stands below the
+   * Projects group. Desktop keeps the signature in the sidebar (`layout.tsx`).
+   */
+  signature: {
+    display: { default: "none", [media.mobile]: "block" },
+    gridColumn: "1 / -1",
+    margin: 0,
+    paddingBlock: space.touchInset,
+  },
   /** The Work group's footer: "Archive" in the title column, the count beside it. */
   archive: {
     display: "grid",
