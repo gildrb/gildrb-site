@@ -39,7 +39,7 @@ export function leadOf(markdown: string, live: ReadonlySet<string>): string | un
     .find(({ id }) => !demos.has(id) || live.has(id))?.id;
 }
 
-/** Parses the case-study Markdown subset documented in README.md. */
+/** Parses the case-study Markdown subset. */
 export function parse(markdown: string): { title: string; blocks: Block[] } {
   const [titleLine = "", ...lines] = markdown.replaceAll("\r\n", "\n").trim().split("\n");
   if (!titleLine.startsWith("# ")) throw new Error("Case Markdown must begin with one # title.");

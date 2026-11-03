@@ -30,7 +30,7 @@ export type Assets = {
   shareImage: string;
 };
 
-// Each face is subset to exactly its range (see README), so declare it to the browser. Inter
+// Each face is subset to exactly its range, so declare it to the browser. Inter
 // also carries Latin Extended-A, for names such as Bēhance; the monospace face does not need it.
 const monoRanges =
   "U+0020-007E,U+00A0-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2010-205E,U+20AC,U+2122,U+2190-21FF,U+2212,U+2500-257F";
