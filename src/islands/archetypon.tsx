@@ -956,7 +956,7 @@ const styles = stylex.create({
       default: `calc(${space.linkLineHeight} + 2 * ${space.portfolioRowPadding})`,
       [media.mobile]: space.touchTarget,
     },
-    color: colors.secondary,
+    color: colors.primary,
   },
   /** As the project table's header: labels (`ui.label`) on the text's line, a hairline under. */
   header: {
@@ -967,11 +967,11 @@ const styles = stylex.create({
     // The row's own colour would override the label's.
     color: colors.quaternary,
   },
-  /** A format that is off: its whole row goes dark grey, settings included. */
-  off: { color: colors.tertiary },
+  /** A format that is off: its whole row and its dash go to the labels' dark brown. */
+  off: { color: colors.quaternary },
   end: { justifySelf: "end" },
-  /** A cell that does not apply to its format: a dark grey dash, nothing to fill in. */
-  none: { color: colors.tertiary, userSelect: "none" },
+  /** A cell that does not apply to its format: a dark brown dash, nothing to fill in. */
+  none: { color: colors.quaternary, userSelect: "none" },
   // White is picked, dark grey is not. Nothing else changes color, hover included, so the
   // color always means one thing.
   toggle: {
@@ -989,7 +989,7 @@ const styles = stylex.create({
     fontWeight: typeScale.emphasisWeight,
   },
   /** A setting in a row, named by its value; quiet like the other interface links (`ui.quiet`). */
-  setting: { justifySelf: "start", color: "inherit" },
+  setting: { justifySelf: "start" },
   percent: {
     display: "flex",
     alignItems: "baseline",
@@ -1032,7 +1032,7 @@ const styles = stylex.create({
   status: {
     margin: 0,
     marginTop: { default: 0, ":empty": `calc(${space.sectionGap} * -1)` },
-    color: colors.secondary,
+    color: colors.primary,
     minHeight: { default: space.linkLineHeight, ":empty": 0 },
   },
   problem: { color: colors.primary },
@@ -1060,7 +1060,7 @@ const styles = stylex.create({
   },
   body: { minWidth: 0 },
   name: { margin: 0, color: colors.primary, overflowWrap: "anywhere" },
-  meta: { margin: 0, color: colors.secondary },
+  meta: { margin: 0, color: colors.primary },
   steps: {
     display: "flex",
     flexWrap: "wrap",
@@ -1069,6 +1069,8 @@ const styles = stylex.create({
     padding: 0,
     listStyle: "none",
   },
+  // The converter's one local state scale, between the ladder's rungs: waiting tertiary, work
+  // in progress secondary, finished primary.
   pending: { color: colors.tertiary },
   running: { color: colors.secondary },
   done: { color: colors.primary },
@@ -1090,7 +1092,7 @@ const styles = stylex.create({
     display: "flex",
     justifyContent: "space-between",
     columnGap: space.tableGap,
-    color: colors.secondary,
+    color: colors.primary,
   },
   path: { minWidth: 0, overflowWrap: "anywhere" },
 });
