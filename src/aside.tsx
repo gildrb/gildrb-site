@@ -22,7 +22,7 @@ export function SourcesLine({ links, style }: { links: readonly Link[]; style?: 
         <>
           {index > 0 && ", "}
           <a
-            {...stylex.props(ui.focusRing, ui.outbound, ui.respond, styles.address)}
+            {...stylex.props(ui.focusRing, ui.quiet, ui.respond, styles.address)}
             href={href}
             rel="noopener noreferrer"
             aria-label={`${label}: ${destination(href)}`}
@@ -36,10 +36,10 @@ export function SourcesLine({ links, style }: { links: readonly Link[]; style?: 
 }
 
 const styles = stylex.create({
-  /** As the sidebar's "Contact" and "Links". */
-  label: { color: colors.secondary },
+  /** The name in full contrast, as the page's headings. */
+  label: { color: colors.primary },
   /** The Sources line: running text, an address may break anywhere rather than overflow. */
   line: { margin: 0, color: colors.article, overflowWrap: "anywhere" },
-  /** Set like the article links (`markdown.tsx`), with `ui.outbound`. */
-  address: { color: { default: colors.article, ":focus-visible": colors.primary } },
+  /** Quiet, as the sidebar's links: bronze at rest, full contrast on hover, no underline. */
+  address: { overflowWrap: "anywhere" },
 });
