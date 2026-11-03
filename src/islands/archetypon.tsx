@@ -657,8 +657,7 @@ export function Converter() {
 
       <div {...stylex.props(styles.actions)}>
         <button
-          {...stylex.props(ui.reset, ui.outbound, ui.respond, ui.focusRing, styles.choose)}
-          type="button"
+          {...stylex.props(ui.reset, ui.quiet, ui.respond, ui.focusRing)}
           onClick={() => picker.current?.click()}
         >
           Choose files
@@ -834,7 +833,7 @@ function OptionsPanel({
                 empty
               ) : (
                 <button
-                  {...stylex.props(ui.reset, ui.outbound, ui.respond, ui.focusRing, styles.setting)}
+                  {...stylex.props(ui.reset, ui.quiet, ui.respond, ui.focusRing, styles.setting)}
                   type="button"
                   aria-label={`${labels[format]} background: ${backgroundLabels[backgrounds[format]]}`}
                   onClick={() =>
@@ -933,8 +932,6 @@ function ResultList({ results }: { results: readonly Result[] }) {
 
 const styles = stylex.create({
   tool: { display: "flex", flexDirection: "column", gap: space.sectionGap },
-  /** The page's one call to action, at full contrast, with `ui.outbound`. */
-  choose: { color: colors.primary },
   panel: { display: "flex", flexDirection: "column", gap: space.sectionGap },
   /**
    * The project table's system (`portfolio.tsx`, `row.tsx`) on a settings table's columns
@@ -968,7 +965,7 @@ const styles = stylex.create({
     paddingBlock: { default: `0 ${space.portfolioRowPadding}`, [media.mobile]: space.touchInset },
     boxShadow: `inset 0 -1px ${colors.hairline}`,
     // The row's own colour would override the label's.
-    color: colors.tertiary,
+    color: colors.quaternary,
   },
   /** A format that is off: its whole row goes dark grey, settings included. */
   off: { color: colors.tertiary },
@@ -991,7 +988,7 @@ const styles = stylex.create({
     alignItems: "center",
     fontWeight: typeScale.emphasisWeight,
   },
-  /** A setting in a row, named by its value (`ui.outbound`); pressing it switches to the other value. */
+  /** A setting in a row, named by its value; quiet like the other interface links (`ui.quiet`). */
   setting: { justifySelf: "start", color: "inherit" },
   percent: {
     display: "flex",
