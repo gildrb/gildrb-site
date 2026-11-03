@@ -171,8 +171,8 @@ export const pageColor = { dark: "oklch(15.5% 0.013 55)", light: "oklch(99.5% 0.
  * other end, ivory paper (hue 85, 0.004) under umber ink (hue 50 to 58, 0.018 to 0.036), held
  * lower than the dark ladder's chroma: on paper the same chroma reads as sepia.
  *
- * The text ladder in APCA. Dark, on the page: primary Lc 97, article 82, secondary 63, tertiary
- * 45 (WCAG 6.5:1). Light: primary Lc 98, article 93, secondary 84, tertiary 73 (WCAG 5.5:1).
+ * The text ladder in APCA. Dark, on the page: primary Lc 97, secondary 63, tertiary 45 (WCAG
+ * 6.5:1). Light: primary Lc 98, secondary 84, tertiary 73 (WCAG 5.5:1).
  * Light is not a mirror of dark: grey on a light page reads fainter than on a dark one, the
  * reason light prose is heavier too (`proseWeight`).
  */
@@ -192,7 +192,6 @@ export const colors = stylex.defineVars({
   quaternary: { default: "oklch(56% 0.05 60)", [light]: "oklch(35% 0.026 54)" },
   /** Dates, descriptors, quiet links at rest. */
   tertiary: { default: "oklch(67% 0.042 64)", [light]: "oklch(50% 0.036 58)" },
-  article: { default: "oklch(95% 0.02 85)", [light]: "oklch(21% 0.018 50)" },
   /** Rules: the page's text at 12% opacity, so they take the tint of whatever is under them. */
   hairline: { default: "oklch(95% 0.02 85 / 0.12)", [light]: "oklch(21% 0.018 50 / 0.12)" },
   codeBg: { default: "oklch(21% 0.016 58)", [light]: "oklch(95% 0.018 82)" },

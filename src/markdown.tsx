@@ -608,7 +608,7 @@ export const styles = stylex.create({
   part: { fontWeight: typeScale.textWeight },
   /** A step inside a part: running-text size (`ui.text`), set apart by weight. */
   subheading: { fontWeight: typeScale.emphasisWeight },
-  prose: { color: colors.article, fontWeight: colors.proseWeight },
+  prose: { color: colors.primary, fontWeight: colors.proseWeight },
   /** The opening paragraph: what the work is, at full contrast. */
   lede: { color: colors.primary },
   /** The text's width. */
@@ -621,7 +621,7 @@ export const styles = stylex.create({
   item: { "::marker": { color: colors.tertiary } },
   nextItem: { marginTop: space.unit },
   /** Set with `ui.outbound` and `ui.respond`. */
-  link: { color: { default: colors.article, ":focus-visible": colors.primary } },
+  link: { color: { default: colors.primary, ":focus-visible": colors.primary } },
   /**
    * Inline code: the code size on its sentence's line, never spreading the lines (`lineHeight: 1`).
    * On `ui.codeSurface` with `ui.edge`. An inline box is as tall as its font's glyph

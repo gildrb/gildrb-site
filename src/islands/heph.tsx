@@ -1070,7 +1070,7 @@ const styles = stylex.create({
       `0 2px 6px color-mix(in oklch, ${colors.shadow} 18%, transparent)`,
       `0 40px 90px -20px color-mix(in oklch, ${colors.shadow} 60%, transparent)`,
     ].join(", "),
-    color: colors.article,
+    color: colors.primary,
     fontSize: { default: "13px", [small]: "10px" },
     lineHeight: 1.35,
     WebkitTextSizeAdjust: "100%",

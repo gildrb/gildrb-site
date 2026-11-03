@@ -1039,7 +1039,7 @@ const styles = stylex.create({
   /** Set like the article links (`markdown.tsx`), with `ui.outbound`. */
   download: {
     width: "fit-content",
-    color: { default: colors.article, ":focus-visible": colors.primary },
+    color: { default: colors.primary, ":focus-visible": colors.primary },
   },
   list: { margin: 0, padding: 0, listStyle: "none" },
   /** Two units above and below; the preview is two lines tall, the name and its size beside it. */

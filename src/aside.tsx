@@ -39,7 +39,7 @@ const styles = stylex.create({
   /** The name in full contrast, as the page's headings. */
   label: { color: colors.primary },
   /** The Sources line: running text, an address may break anywhere rather than overflow. */
-  line: { margin: 0, color: colors.article, overflowWrap: "anywhere" },
+  line: { margin: 0, color: colors.primary, overflowWrap: "anywhere" },
   /** Quiet, as the sidebar's links: bronze at rest, full contrast on hover, no underline. */
   address: { overflowWrap: "anywhere" },
 });
