@@ -18,7 +18,6 @@ import {
   typeScale,
 } from "./tokens.stylex.ts";
 import { type Style, ui, untranslated } from "./ui.tsx";
-import { Veil } from "./veil.tsx";
 import { versioned } from "./versioned.ts";
 
 export type Assets = {
@@ -172,9 +171,9 @@ export function Document({
         {/* After the stylesheet, so the Inter @font-face exists when the gate asks for it. */}
         <script data-cfasync="false" dangerouslySetInnerHTML={{ __html: fontGate }} />
         <script type="speculationrules" dangerouslySetInnerHTML={{ __html: speculationRules }} />
-        {/* High priority: the page reacts to the pointer (the Contents list, the enlargement) as
-            soon as it shows. A module script never blocks the first paint. Preact's typings lack
-            `fetchpriority` on <script> although browsers support it, hence the spread. */}
+        {/* High priority: the page reacts to the pointer (the enlargement) as soon as it shows.
+            A module script never blocks the first paint. Preact's typings lack `fetchpriority`
+            on <script> although browsers support it, hence the spread. */}
         <script
           data-cfasync="false"
           type="module"
@@ -198,8 +197,6 @@ export function Document({
           aria-live="polite"
           aria-atomic="true"
         />
-        {/* Scrolling pages only: the homepage holds to the viewport. */}
-        {!home && <Veil />}
         {children}
         {/* Align the layout before the first paint (see the render-blocking `expect` in <head>). */}
         <script data-cfasync="false" dangerouslySetInnerHTML={{ __html: alignScript }} />
@@ -425,6 +422,29 @@ const styles = stylex.create({
     margin: "0 auto",
     minHeight: { default: "100vh", [media.mobile]: "auto" },
     gap: { default: space.layoutGap, [media.mobile]: 0 },
+    // Desktop, every page: a hairline across the viewport where Contact and the lists start (8px
+    // grid: 128px), and one down the viewport left of the content column. Fixed, so
+    // the cross stays put across pages and while the page scrolls.
+    "::before": {
+      content: "''",
+      display: { default: "none", [media.desktop]: "block" },
+      position: "fixed",
+      insetInline: 0,
+      top: `calc(${space.pageInset} + 10 * ${space.unit})`,
+      height: 1,
+      backgroundColor: colors.hairline,
+      pointerEvents: "none",
+    },
+    "::after": {
+      content: "''",
+      display: { default: "none", [media.desktop]: "block" },
+      position: "fixed",
+      insetBlock: 0,
+      left: `calc(50% - (${space.sidebarColumn} + ${space.layoutGap} + ${space.contentColumn}) / 2 + ${space.sidebarColumn} + ${space.layoutGap} - 4 * ${space.unit})`,
+      width: 1,
+      backgroundColor: colors.hairline,
+      pointerEvents: "none",
+    },
   },
   /**
    * Phones: the page ends a section gap below its last row, and clears Safari's bottom bar,
@@ -437,9 +457,11 @@ const styles = stylex.create({
     },
   },
   homeLayout: {
+    // Desktop: the intro, the lists at their own height, and the room left below them, where the
+    // homepage previews a row's picture (`home.tsx`).
     gridTemplateRows: {
       default: null,
-      [media.desktop]: "auto minmax(min-content, 1fr) auto",
+      [media.desktop]: "auto auto 1fr",
       [media.mobile]: "auto auto auto minmax(0, 1fr)",
       // Dense: like on phones, the page holds to the viewport and the project list scrolls. The
       // list's row still grows to fit the sidebar links, so those are never cut off.
@@ -500,7 +522,11 @@ const styles = stylex.create({
   },
   homeContent: { gridColumn: { default: null, [media.desktop]: 2 } },
   /** Case pages' text: `ui.text`, so it follows the reader's font size from tablets up. */
-  caseContent: { minHeight: "100vh" },
+  caseContent: {
+    minHeight: "100vh",
+    // Desktop: the case starts below the hairline, on the row where Contact starts.
+    paddingTop: { default: null, [media.desktop]: `calc(18 * ${space.unit})` },
+  },
   name: {
     lineHeight: space.linkLineHeight,
     // JavaScript measures the homepage intro and publishes its height, so the sidebar

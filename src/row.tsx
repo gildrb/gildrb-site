@@ -85,11 +85,13 @@ const styles = stylex.create({
     // aligned to.
     paddingBlock: { default: space.unit, [media.desktop]: space.portfolioRowPadding },
     // Only hover (where there is hover) and keyboard focus raise the row; a finger's press
-    // does not (the grey tap flash is off too, see `layout.tsx`).
+    // does not (the grey tap flash is off too, see `layout.tsx`). J and K select a row the way
+    // the pointer would (`keys.ts`), so the selection is lit as the hover is.
     color: {
       default: colors.tertiary,
       ":hover": { [media.hover]: colors.primary },
       ":focus-visible": colors.primary,
+      ":is([data-selected])": colors.primary,
     },
     textDecoration: "none",
     touchAction: "manipulation",

@@ -6,17 +6,23 @@ import { email } from "../site.ts";
 import { colors, fontFeatures, space } from "../tokens.stylex.ts";
 import { ui } from "../ui.tsx";
 
+/** Copies the address and says so through the live region; `c` anywhere does too (`keys.ts`). */
+export async function copyEmail(): Promise<boolean> {
+  const copied = await navigator.clipboard.writeText(email).then(
+    () => true,
+    () => false,
+  );
+  announce(copied ? "Email copied to clipboard" : "Email could not be copied");
+  return copied;
+}
+
 export function Email() {
   const [state, setState] = useState<"idle" | "copied" | "failed">("idle");
   const timer = useRef(0);
   async function copy(event: TargetedMouseEvent<HTMLButtonElement>) {
     event.currentTarget.blur();
-    const copied = await navigator.clipboard.writeText(email).then(
-      () => true,
-      () => false,
-    );
+    const copied = await copyEmail();
     setState(copied ? "copied" : "failed");
-    announce(copied ? "Email copied to clipboard" : "Email could not be copied");
     clearTimeout(timer.current);
     timer.current = window.setTimeout(() => setState("idle"), 1000);
   }

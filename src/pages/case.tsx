@@ -1,9 +1,9 @@
 import * as stylex from "@stylexjs/stylex";
 import { ArchiveGrid, type Work } from "../archive.tsx";
-import { Aside, SourcesLine } from "../aside.tsx";
+import { SourcesLine } from "../aside.tsx";
 import { Island } from "../island.tsx";
 import { Converter } from "../islands/archetypon.tsx";
-import { Article, demos, type Heading, outline, parse, sizesFor, sources } from "../markdown.tsx";
+import { Article, demos, parse, sizesFor, sources } from "../markdown.tsx";
 import {
   type Assets,
   Document,
@@ -38,16 +38,6 @@ const monoBlocks = (markdown: string) =>
   );
 
 /**
- * The parts a page lists to jump to. A page of a screen or two (the product pages, mL7, Local
- * Studio) is read at once and lists none. Pages with three or more figures run long enough to need
- * the list.
- */
-function contents(markdown: string): Heading[] {
-  const figures = parse(markdown).blocks.filter((block) => block.type === "media").length;
-  return figures >= 3 ? outline(markdown) : [];
-}
-
-/**
  * Every inner page. Its tab and its link preview read like its breadcrumb ("Gil Rodrigues → T3")
  * unless the page names its own `title`; the preview shows the page's own image, or else the
  * homepage as rendered at build time.
@@ -63,7 +53,7 @@ function Frame({
   image = assets.shareImage,
   head,
   mono,
-  third,
+  heading = false,
   children,
 }: {
   assets: Assets;
@@ -78,14 +68,10 @@ function Frame({
   current: string;
   head: preact.ComponentChildren;
   mono: boolean;
-  /**
-   * The page's contents, shown in the sidebar instead of the links; the links on a plain page
-   * without parts; or the links with the breadcrumb as the page's heading (the archive page).
-   */
-  third: { $: "Aside"; markdown: string } | { $: "Links" } | { $: "Content" };
+  /** The archive page makes the breadcrumb its `<h1>`. */
+  heading?: boolean;
   children: preact.ComponentChildren;
 }) {
-  const parts = third.$ === "Aside" ? contents(third.markdown) : [];
   return (
     <Document
       assets={assets}
@@ -117,8 +103,8 @@ function Frame({
             "aria-label": `${current} navigation`,
           }}
         >
-          <Name current={current} heading={third.$ === "Content"} />
-          {parts.length > 0 ? <Aside parts={parts} /> : <PageLinks />}
+          <Name current={current} heading={heading} />
+          <PageLinks />
         </Sidebar>
         <Main>{children}</Main>
       </Shell>
@@ -195,7 +181,6 @@ export function CasePage({
       current={item.name}
       title={item.headline}
       mono={monoBlocks(markdown)}
-      third={{ $: "Aside", markdown }}
       head={
         <>
           <Alternates slug={item.slug} name={item.name} />
@@ -276,7 +261,7 @@ export function AllPage({ assets, work }: { assets: Assets; work: readonly Work[
       description={`Logos, typefaces, identities and websites by ${person.name}.`}
       current="Archive"
       mono={false}
-      third={{ $: "Content" }}
+      heading
       head={
         <>
           <Alternates />
@@ -332,7 +317,6 @@ export function DocPage({
   page: (typeof pages)[number];
   markdown: string;
 }) {
-  const parts = contents(markdown);
   return (
     <Frame
       assets={assets}
@@ -341,7 +325,6 @@ export function DocPage({
       description={page.description}
       current={page.name}
       mono={monoBlocks(markdown)}
-      third={parts.length > 0 ? { $: "Aside", markdown } : { $: "Links" }}
       head={
         <>
           <Alternates slug={page.slug} name={page.name} />
@@ -366,7 +349,7 @@ export function DocPage({
       }
     >
       <article {...stylex.props(styles.column, styles.phoneItem)}>
-        <Article markdown={markdown} eager reading={parts.length > 0} />
+        <Article markdown={markdown} eager />
       </article>
     </Frame>
   );
@@ -396,7 +379,6 @@ export function ProductPage({
       description={item.description}
       current={item.name}
       mono={monoBlocks(markdown)}
-      third={{ $: "Aside", markdown }}
       head={
         <>
           <Alternates slug={item.slug} name={item.name} />

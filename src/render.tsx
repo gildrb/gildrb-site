@@ -4,8 +4,19 @@ import { collect } from "./archive.tsx";
 import { files } from "./files.ts";
 import type { Assets } from "./layout.tsx";
 import { AllPage, CasePage, DocPage, ProductPage } from "./pages/case.tsx";
-import { Home } from "./pages/home.tsx";
-import { builtProducts, type Case, cases, origin, pages, type Product, products } from "./site.ts";
+import { type Preview, Home, livePreviews } from "./pages/home.tsx";
+import { leadOf } from "./markdown.tsx";
+import { media } from "./media.ts";
+import {
+  builtProducts,
+  type Case,
+  cases,
+  origin,
+  pages,
+  type Product,
+  products,
+  projects,
+} from "./site.ts";
 
 // For the build (`vite.config.ts`): the share image comes first, since the pages link it, and the
 // stamped copies of `public/` files last, once rendering has named them all.
@@ -61,11 +72,24 @@ const html = (page: VNode) =>
     (island) => `<!--email_off-->${island}<!--/email_off-->`,
   )}\n`;
 
+/**
+ * The homepage rows with a picture to preview: each page's lead image, recording or live demo;
+ * for a project with no page here, the picture `media.ts` keeps for its preview.
+ */
+const previews: Preview[] = projects.flatMap(({ href, slug }) => {
+  if (slug === null) return [];
+  const body = markdown[slug];
+  const id =
+    (body === undefined ? undefined : leadOf(body, livePreviews)) ??
+    Object.keys(media).find((key) => media[key]?.preview === slug);
+  return id === undefined ? [] : [{ href, id }];
+});
+
 /** Every generated file of the site, keyed by its path in the output directory. */
 export function render(assets: Assets): Record<string, string> {
   const work = collect(markdown);
   return {
-    "index.html": html(<Home assets={assets} work={work} />),
+    "index.html": html(<Home assets={assets} work={work} previews={previews} />),
     "all.html": html(<AllPage assets={assets} work={work} />),
     ...Object.fromEntries(
       cases.map((item) => [

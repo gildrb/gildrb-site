@@ -28,6 +28,17 @@ export function bannerOf(blocks: Block[]): Extract<Block, { type: "media" }> | u
   return first?.type === "media" ? first : undefined;
 }
 
+/**
+ * The first recording or image a page shows, the banner where it opens with one. Live demos
+ * count where `live` names them; the others are passed over for the next file (`demos`). The
+ * homepage previews its row with it (`home.tsx`).
+ */
+export function leadOf(markdown: string, live: ReadonlySet<string>): string | undefined {
+  return parse(markdown)
+    .blocks.flatMap((block) => (block.type === "media" ? block.items : []))
+    .find(({ id }) => !demos.has(id) || live.has(id))?.id;
+}
+
 /** Parses the case-study Markdown subset documented in README.md. */
 export function parse(markdown: string): { title: string; blocks: Block[] } {
   const [titleLine = "", ...lines] = markdown.replaceAll("\r\n", "\n").trim().split("\n");
@@ -259,7 +270,12 @@ function Figures({
             <Island
               name="curves"
               component={Specimen}
-              props={{ fill: banner, font: versioned("/fonts/curves.woff2") }}
+              props={{
+                fill: banner,
+                font: versioned("/fonts/curves.woff2"),
+                square: false,
+                running: true,
+              }}
             />
           ) : id === "ben-davis-demo" ? (
             <Island
@@ -414,13 +430,6 @@ function anchors(blocks: readonly Block[]): Map<number, Anchor> {
     found.set(index, { id, text, top: block.type === "h2" || !chapter });
   });
   return found;
-}
-
-/** The parts of a page, for its contents list. */
-export function outline(markdown: string): Heading[] {
-  return [...anchors(parse(markdown).blocks).values()]
-    .filter(({ top }) => top)
-    .map(({ id, text }) => ({ id, text }));
 }
 
 /** What a block is, for the space above it. */

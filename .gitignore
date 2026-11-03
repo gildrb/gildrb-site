@@ -3,6 +3,8 @@ AGENTS.md
 node_modules/
 dist/
 .wrangler/
+# The built site as Bend: `npm run laws` writes it from dist/.
+/site/
 autoresearch*
 doctor.config.json
 
@@ -16,4 +18,3 @@ doctor.config.json
 credentials.json
 secrets.json
 .idea/
-.vitest/

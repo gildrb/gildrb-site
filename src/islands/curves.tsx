@@ -177,10 +177,21 @@ const lines = [
  * A CURVES specimen: all 96 glyphs on a grid of 3:4 cells, around a 4:3 showcase that draws
  * the chosen glyph on its cap height, baseline and descender, with its advance width, name and
  * code. Pointing at a cell, the arrow keys or typing a character choose a glyph. Until then
- * the specimen steps through the set by itself while it is on screen. With `fill`, the panel
- * fills the banner window of the case page; otherwise it keeps 4:3.
+ * the specimen steps through the set by itself while it is on screen and `running`. With
+ * `fill`, the panel fills the banner window of the case page; otherwise it keeps 4:3. `square`
+ * drops the banner's corner (the homepage preview, `preview.ts`).
  */
-export function Specimen({ fill, font }: { fill: boolean; font: string }) {
+export function Specimen({
+  fill,
+  font,
+  square,
+  running,
+}: {
+  fill: boolean;
+  font: string;
+  square: boolean;
+  running: boolean;
+}) {
   const frame = useRef<HTMLDivElement>(null);
   const [chosen, setChosen] = useState(first);
   const [touched, setTouched] = useState(false);
@@ -188,7 +199,8 @@ export function Specimen({ fill, font }: { fill: boolean; font: string }) {
 
   useEffect(() => {
     const box = frame.current;
-    if (!box || touched || matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    if (!box || !running || touched || matchMedia("(prefers-reduced-motion: reduce)").matches)
+      return undefined;
     let timer = 0;
     const step = () => {
       setChosen((index) => drawn[(drawn.indexOf(index) + 1) % drawn.length] ?? first);
@@ -203,7 +215,7 @@ export function Specimen({ fill, font }: { fill: boolean; font: string }) {
       window.clearTimeout(timer);
       watcher.disconnect();
     };
-  }, [touched]);
+  }, [touched, running]);
 
   const choose = (index: number) => {
     setTouched(true);
@@ -239,7 +251,7 @@ export function Specimen({ fill, font }: { fill: boolean; font: string }) {
   const left = view.width / 2 - (glyph.width * scale) / 2;
   const shown = character(glyph);
   return (
-    <div ref={frame} {...stylex.props(styles.frame, fill && styles.fill)}>
+    <div ref={frame} {...stylex.props(styles.frame, fill && styles.fill, square && styles.square)}>
       <style
         dangerouslySetInnerHTML={{
           // The ascent is set so a line box centres the cap height: the cells need no nudging.
@@ -373,6 +385,8 @@ const styles = stylex.create({
   },
   // Fills the case pages' banner window on desktop (`styles.window` in markdown.tsx).
   fill: { height: { default: null, [media.desktop]: "100%" } },
+  // The homepage preview: square-cornered, as everything on the homepage (the frame's hairline follows).
+  square: { borderRadius: 0 },
   // 4:3 inside whatever window the banner leaves: as wide as fits, never cropped.
   panel: {
     width: "min(100cqw, calc(100cqh * 4 / 3))",

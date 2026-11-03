@@ -345,9 +345,10 @@ const externals: readonly External[] = [];
 
 /**
  * `external`: the row leaves Gil's own pages (underlined title). Products live on their own
- * hosts but are his pages too, so they read as subpages (no underline).
+ * hosts but are his pages too, so they read as subpages (no underline). `slug`: its page's
+ * `src/content/<slug>.md`, where it has one here; null for projects that live elsewhere.
  */
-export type Project = Row & { href: string; external: boolean };
+export type Project = Row & { href: string; external: boolean; slug: string | null };
 
 /**
  * Homepage rows: Projects first, then Work, each newest first. Software Gil maintains comes
@@ -358,7 +359,7 @@ export const projects: readonly Project[] = [
     .filter((item) => item.listed)
     .map((item) => ({ ...item, href: `/${item.slug}`, external: false })),
   ...products.map((item) => ({ ...item, href: `${item.home}/`, external: false })),
-  ...externals.map((item) => ({ ...item, external: true })),
+  ...externals.map((item) => ({ ...item, external: true, slug: null })),
 ].toSorted(
   (left, right) =>
     groupRank(left.group) - groupRank(right.group) || right.date.localeCompare(left.date),

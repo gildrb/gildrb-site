@@ -23,6 +23,11 @@ export type Media = {
   archive?: true;
   /** Archive work that no case page shows but that belongs to this case study (its slug). */
   project?: string;
+  /**
+   * Shown only as the homepage preview (`preview.ts`) of this project (its slug), which has no
+   * page here to take one from; no page shows it.
+   */
+  preview?: string;
 };
 
 export const media: Readonly<Record<string, Media>> = {
@@ -483,5 +488,12 @@ export const media: Readonly<Record<string, Media>> = {
     archive: true,
     width: 1280,
     height: 720,
+  },
+  /** Eukhe has no page here; this is its homepage preview only. */
+  "eukhe-session": {
+    alt: "Eukhe in a terminal: asked which formats a project's CLI exports, it searches and reads the code, then lists each format with the file that encodes it",
+    preview: "eukhe",
+    width: 1920,
+    height: 1200,
   },
 };

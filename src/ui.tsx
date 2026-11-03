@@ -174,8 +174,11 @@ export const ui = stylex.create({
       ":hover": "0s",
       ":focus-visible": "0s",
       ":is([aria-current])": "0s",
+      // A row the keys select (`keys.ts`) is lit and let go as a hovered one.
+      ":is([data-selected])": "0s",
       [stylex.when.ancestor(":hover", rowMarker)]: "0s",
       [stylex.when.ancestor(":focus-visible", rowMarker)]: "0s",
+      [stylex.when.ancestor("[data-selected]", rowMarker)]: "0s",
     },
     transitionTimingFunction: motion.responseEasing,
   },
@@ -211,6 +214,7 @@ export const ui = stylex.create({
       ":focus-visible": "currentColor",
       [stylex.when.ancestor(":hover", rowMarker)]: { [media.hover]: "currentColor" },
       [stylex.when.ancestor(":focus-visible", rowMarker)]: "currentColor",
+      [stylex.when.ancestor("[data-selected]", rowMarker)]: "currentColor",
     },
   },
   /**

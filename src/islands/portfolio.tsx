@@ -240,7 +240,7 @@ const styles = stylex.create({
     outlineOffset: space.focusOffset,
     borderRadius: { default: null, ":focus-visible": `calc(${space.radius} / 2)` },
   },
-  /** As a row's subject: dim until the footer is hovered or focused. */
+  /** As a row's subject: dim until the footer is hovered, focused or selected (`keys.ts`). */
   more: {
     gridColumn: 2,
     justifySelf: { default: null, [media.mobile]: "end" },
@@ -248,6 +248,7 @@ const styles = stylex.create({
       default: colors.tertiary,
       [stylex.when.ancestor(":hover", rowMarker)]: { [media.hover]: colors.primary },
       [stylex.when.ancestor(":focus-visible", rowMarker)]: colors.primary,
+      [stylex.when.ancestor("[data-selected]", rowMarker)]: colors.primary,
     },
   },
   section: {

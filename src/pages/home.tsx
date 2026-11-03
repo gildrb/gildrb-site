@@ -3,11 +3,28 @@ import type { Work } from "../archive.tsx";
 import { profile } from "../files.ts";
 import { Island } from "../island.tsx";
 import { Portfolio } from "../islands/portfolio.tsx";
-import { type Assets, Document, JsonLd, Links, Main, Name, Shell, Sidebar } from "../layout.tsx";
+import {
+  type Assets,
+  Document,
+  JsonLd,
+  Links,
+  Main,
+  Name,
+  scriptJson,
+  Shell,
+  Sidebar,
+} from "../layout.tsx";
+import { sources } from "../markdown.tsx";
+import { media as artwork } from "../media.ts";
 import { developers, origin, person, profiles, projects } from "../site.ts";
-import { media, space } from "../tokens.stylex.ts";
+import { media, motion, space } from "../tokens.stylex.ts";
 import { ui } from "../ui.tsx";
 import { shareFrame } from "../og.tsx";
+import type { PreviewData } from "../preview.ts";
+import { versioned } from "../versioned.ts";
+
+/** A homepage row's preview: the row's link and its page's lead image or recording (`leadOf`). */
+export type Preview = { href: string; id: string };
 
 const title = `${person.name} (${person.handle})`;
 
@@ -60,7 +77,15 @@ function Head({ shareImage }: { shareImage: string }) {
   );
 }
 
-export function Home({ assets, work }: { assets: Assets; work: readonly Work[] }) {
+export function Home({
+  assets,
+  work,
+  previews,
+}: {
+  assets: Assets;
+  work: readonly Work[];
+  previews: readonly Preview[];
+}) {
   return (
     <Document
       assets={assets}
@@ -89,9 +114,39 @@ export function Home({ assets, work }: { assets: Assets; work: readonly Work[] }
               more: work.filter(({ from }) => from.$ === "Archive" || !from.project.listed).length,
             }}
           />
+          <Previews previews={previews} />
         </Main>
       </Shell>
     </Document>
+  );
+}
+
+/** Live demos the homepage can preview as they run (`preview.ts`); other demos give way to a file. */
+export const livePreviews: ReadonlySet<string> = new Set(["curves-demo"]);
+
+/**
+ * Desktop: the lead picture of the row under the pointer or selected with the keys, in the room
+ * below the table, and nothing at rest. It shows as the row lights, at once, and leaves with the
+ * row's fade (`motion.response`). Only the empty room is markup, so it never shifts the page;
+ * the pictures travel as data (`PreviewData`), which `preview.ts` turns into elements after the
+ * first paint, loads, fits to the room and shows one at a time. Decoration: the row already names
+ * what it shows.
+ */
+function Previews({ previews }: { previews: readonly Preview[] }) {
+  const data: PreviewData[] = previews.map(({ href, id }) => {
+    if (id === "curves-demo")
+      return { $: "Specimen", href, font: versioned("/fonts/curves.woff2") };
+    const item = artwork[id];
+    if (!item) throw new Error(`Unknown media id: ${id}`);
+    const { src, srcset } = sources(id);
+    return item.video
+      ? { $: "Video", href, poster: src, src: versioned(`/videos/gil-rodrigues-${id}.mp4`) }
+      : { $: "Image", href, src, srcset: srcset ?? null };
+  });
+  return (
+    <div {...stylex.props(styles.previews)} aria-hidden="true" data-previews>
+      <script type="application/json" dangerouslySetInnerHTML={{ __html: scriptJson(data) }} />
+    </div>
   );
 }
 
@@ -112,5 +167,23 @@ const styles = stylex.create({
   /** Desktop: the About line one line interval below its label (`linkGap`, as in the sidebar). */
   heading: {
     marginBottom: { default: space.sectionContentGap, [media.desktop]: space.linkGap },
+  },
+  /**
+   * The room below the table, to the page's bottom inset (the layout's last row): the pictures
+   * hang from its top, on the fields from the text's left edge (`preview.ts` sizes them). The
+   * whole fades as a row does: in at once, out over `motion.response`.
+   */
+  previews: {
+    display: { default: "none", [media.desktop]: "block" },
+    gridRow: 3,
+    position: "relative",
+    minHeight: 0,
+    // The pictures never size the page: the room is what the layout leaves.
+    overflow: "hidden",
+    pointerEvents: "none",
+    opacity: { default: 0, ":is([data-shown])": 1 },
+    transitionProperty: "opacity",
+    transitionDuration: { default: motion.response, ":is([data-shown])": "0s" },
+    transitionTimingFunction: motion.responseEasing,
   },
 });

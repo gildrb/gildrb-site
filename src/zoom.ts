@@ -358,6 +358,8 @@ export function enableZoom() {
   // Left and right (or h and l, as in Vim) step through the page's artworks while one is enlarged;
   // on a touch screen, a swipe to the left or right does.
   document.addEventListener("keydown", (event) => {
+    // Escape spent on an artwork is taken, so it does not also leave the page (`keys.ts`).
+    if (event.key === "Escape" && zoomed && !zoomed.closing) event.preventDefault();
     if (event.key === "Escape" || event.key === "Tab") shrink();
     if (!zoomed || zoomed.closing || event.altKey || event.ctrlKey || event.metaKey) return;
     const direction =

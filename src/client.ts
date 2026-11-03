@@ -6,16 +6,21 @@ import { Portfolio } from "./islands/portfolio.tsx";
 import { compareRows, origin, products, type SortDirection, type SortKey } from "./site.ts";
 import { space } from "./tokens.stylex.ts";
 import { loadPagesAhead } from "./ahead.ts";
+import { enableGrid } from "./grid.ts";
+import { enableKeys } from "./keys.ts";
 import { toggleLinks } from "./links.ts";
-import { trackContents } from "./contents.ts";
+import { enablePreview } from "./preview.ts";
 import { autoplayVideos } from "./video.ts";
 import { enableZoom } from "./zoom.ts";
 
 toggleLinks();
 enableZoom();
 autoplayVideos();
-trackContents();
 loadPagesAhead();
+enableGrid();
+// After `enableZoom`: an enlarged artwork takes Escape first, before it can mean "go home".
+enableKeys();
+enablePreview();
 
 const islands: { [Name in keyof Islands]: () => Promise<Islands[Name]> | Islands[Name] } = {
   email: () => Email,
@@ -26,7 +31,7 @@ const islands: { [Name in keyof Islands]: () => Promise<Islands[Name]> | Islands
   archetypon: () => import("./islands/archetypon.tsx").then((module) => module.Converter),
   // Only product pages show copyable commands.
   command: () => import("./islands/command.tsx").then((module) => module.Command),
-  // Only the CURVES case study shows the glyph wall.
+  // The CURVES case study and the homepage preview show the glyph wall; it loads after the page.
   curves: () => import("./islands/curves.tsx").then((module) => module.Specimen),
   // Only the Ben Davis case study plays the mark.
   "ben-davis": () => import("./islands/ben-davis.tsx").then((module) => module.Fold),
@@ -200,7 +205,7 @@ if (document.getElementById("site-title")) {
   });
 }
 
-// Other pages: inside a list of links (Contact, Links, Contents, Sources), ↑ and ↓ step through
+// Other pages: inside a list of links (Contact, Links, Sources), ↑ and ↓ step through
 // that list; anywhere else the keys scroll the page as usual.
 if (!document.getElementById("site-title")) {
   document.addEventListener("keydown", (event) => {
