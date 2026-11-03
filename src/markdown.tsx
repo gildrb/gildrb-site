@@ -526,7 +526,7 @@ export function Article({
       }
       case "p":
         place("text", (spacing) => (
-          <p {...stylex.props(ui.prose, styles.prose, index === opening && styles.lede, spacing)}>
+          <p {...stylex.props(ui.prose, styles.prose, spacing)}>
             <Inline text={block.text} />
           </p>
         ));
@@ -609,8 +609,6 @@ export const styles = stylex.create({
   /** A step inside a part: running-text size (`ui.text`), set apart by weight. */
   subheading: { fontWeight: typeScale.emphasisWeight },
   prose: { color: colors.primary, fontWeight: colors.proseWeight },
-  /** The opening paragraph: what the work is, at full contrast. */
-  lede: { color: colors.primary },
   /** The text's width. */
   measure: { maxWidth: space.contentColumn },
   partGap: { marginTop: `calc(2 * ${space.linkLineHeight})` },
