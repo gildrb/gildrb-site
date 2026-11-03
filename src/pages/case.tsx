@@ -27,7 +27,7 @@ import {
   type Project,
   projects,
 } from "../site.ts";
-import { colors, media, space } from "../tokens.stylex.ts";
+import { colors, listMarker, media, space } from "../tokens.stylex.ts";
 import { ui } from "../ui.tsx";
 import { versioned } from "../versioned.ts";
 
@@ -247,7 +247,7 @@ function next(href: string): Project[] {
 function Next({ projects: list }: { projects: readonly Project[] }) {
   return (
     <nav {...stylex.props(styles.column, styles.phoneItem, styles.next)} aria-label="More projects">
-      <div {...stylex.props(styles.nextList)}>
+      <div {...stylex.props(listMarker, styles.nextList)}>
         {list.map((project, index) => (
           <Row key={project.href} project={project} first={index === 0} home={false} />
         ))}

@@ -331,6 +331,11 @@ export const space = stylex.defineVars({
 
 /** Put on a table row so its cells can react to the row's hover and focus. */
 export const rowMarker = stylex.defineMarker();
+/**
+ * Put on the row list (the homepage table, a case page's next projects) so its rows can dim the
+ * siblings while one of them is hovered.
+ */
+export const listMarker = stylex.defineMarker();
 
 /**
  * Put on <html>, which carries page-wide state: `data-dense` and `data-compact` when a desktop

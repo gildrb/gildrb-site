@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import { useId } from "preact/hooks";
 import { formatDate, type Project } from "./site.ts";
-import { colors, media, rowMarker, space, typeScale } from "./tokens.stylex.ts";
+import { colors, listMarker, media, rowMarker, space, typeScale } from "./tokens.stylex.ts";
 import { Figures, ui, untranslated } from "./ui.tsx";
 
 /**
@@ -36,28 +36,29 @@ export function Row({ project, first, home }: { project: Project; first: boolean
       <Title
         {...stylex.props(
           ui.text,
+          ui.respond,
           styles.cell,
           styles.title,
-          project.external && [ui.respond, ui.outbound],
+          project.external && ui.outbound,
         )}
         id={`${id}-title`}
         {...untranslated}
       >
         {project.title}
       </Title>
-      <span {...stylex.props(ui.text, styles.descriptor)} id={`${id}-descriptor`}>
+      <span {...stylex.props(ui.text, ui.respond, styles.descriptor)} id={`${id}-descriptor`}>
         {group.$ === "Work" ? group.work : project.descriptor}
       </span>
       {group.$ === "Work" ? (
         <time
-          {...stylex.props(ui.text, styles.cell, styles.date)}
+          {...stylex.props(ui.text, ui.respond, styles.cell, styles.date)}
           id={`${id}-end`}
           dateTime={project.date}
         >
           <Figures text={formatDate(project.date)} />
         </time>
       ) : (
-        <span {...stylex.props(ui.text, styles.cell, styles.date)} id={`${id}-end`}>
+        <span {...stylex.props(ui.text, ui.respond, styles.cell, styles.date)} id={`${id}-end`}>
           {group.platform}
         </span>
       )}
@@ -120,16 +121,45 @@ const styles = stylex.create({
     position: "relative",
     display: "block",
     textAlign: "end",
-    color: "inherit",
+    // The row's colour, inherited — except while a sibling row is lit, when it dims and restores
+    // on its own row's state. The restore conditions carry the row marker, so they match the dim
+    // conditions' shape and the later declaration wins.
+    color: {
+      default: "inherit",
+      [stylex.when.ancestor(":hover", listMarker)]: colors.quaternary,
+      [stylex.when.ancestor(":hover", rowMarker)]: { [media.hover]: "inherit" },
+      [stylex.when.ancestor(":focus-visible", rowMarker)]: "inherit",
+      [stylex.when.ancestor("[data-selected]", rowMarker)]: "inherit",
+    },
     paddingInlineEnd: 0,
   },
   /** The thing named, at the emphasis weight; the descriptor and date beside it stay at the text's. */
-  title: { gridColumn: 1, margin: 0, color: colors.primary, fontWeight: typeScale.emphasisWeight },
+  title: {
+    gridColumn: 1,
+    margin: 0,
+    fontWeight: typeScale.emphasisWeight,
+    // The title keeps full contrast except while a sibling is lit, then dims with the row and
+    // restores on its own row's state.
+    color: {
+      default: colors.primary,
+      [stylex.when.ancestor(":hover", listMarker)]: colors.quaternary,
+      [stylex.when.ancestor(":hover", rowMarker)]: colors.primary,
+      [stylex.when.ancestor(":focus-visible", rowMarker)]: colors.primary,
+      [stylex.when.ancestor("[data-selected]", rowMarker)]: colors.primary,
+    },
+  },
   descriptor: {
     gridColumn: { default: 2, [media.mobile]: "1 / -1" },
     gridRow: { default: 1, [media.mobile]: 2 },
     // The row's own colour (grey, full contrast on its hover or focus), inherited, so the subject
-    // fades with the row on leaving; a colour of its own here would switch at once.
-    color: "inherit",
+    // fades with the row on leaving; a colour of its own here would switch at once. While a
+    // sibling row is lit it dims, and restores on its own row's state.
+    color: {
+      default: "inherit",
+      [stylex.when.ancestor(":hover", listMarker)]: colors.quaternary,
+      [stylex.when.ancestor(":hover", rowMarker)]: { [media.hover]: "inherit" },
+      [stylex.when.ancestor(":focus-visible", rowMarker)]: "inherit",
+      [stylex.when.ancestor("[data-selected]", rowMarker)]: "inherit",
+    },
   },
 });

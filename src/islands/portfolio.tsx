@@ -2,7 +2,7 @@ import * as stylex from "@stylexjs/stylex";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { Row } from "../row.tsx";
 import { groups, person, projects } from "../site.ts";
-import { colors, media, rootMarker, rowMarker, space } from "../tokens.stylex.ts";
+import { colors, listMarker, media, rootMarker, rowMarker, space } from "../tokens.stylex.ts";
 import { Figures, ui } from "../ui.tsx";
 
 // The signature's year, the build's own.
@@ -68,7 +68,7 @@ export function Portfolio({ more }: { more: number }) {
         <h2 {...stylex.props(ui.srOnly)} id="portfolio-title">
           Work
         </h2>
-        <div data-rows data-scroll-list ref={list} {...stylex.props(styles.list)}>
+        <div data-rows data-scroll-list ref={list} {...stylex.props(listMarker, styles.list)}>
           {groups.map((group, index) => (
             <div key={group} {...stylex.props(styles.group)}>
               <h3
@@ -84,7 +84,9 @@ export function Portfolio({ more }: { more: number }) {
               {group === "Work" && (
                 <>
                   <a {...stylex.props(rowMarker, ui.respond, styles.archive)} href="/all">
-                    <span {...stylex.props(ui.text, ui.emphasis, styles.title)}>Archive</span>
+                    <span {...stylex.props(ui.text, ui.emphasis, ui.respond, styles.title)}>
+                      Archive
+                    </span>
                     <span {...stylex.props(ui.text, ui.respond, styles.more)}>
                       <Figures text={String(more)} /> more
                     </span>
@@ -232,7 +234,18 @@ const styles = stylex.create({
       [media.desktop]: `calc(${space.groupGap} - ${space.portfolioRowPadding})`,
     },
   },
-  title: { gridColumn: 1 },
+  title: {
+    gridColumn: 1,
+    // The archive's title keeps the footer's colour, but dims while another row is lit, as the
+    // rows' own titles do (`row.tsx`).
+    color: {
+      default: "inherit",
+      [stylex.when.ancestor(":hover", listMarker)]: colors.quaternary,
+      [stylex.when.ancestor(":hover", rowMarker)]: { [media.hover]: "inherit" },
+      [stylex.when.ancestor(":focus-visible", rowMarker)]: "inherit",
+      [stylex.when.ancestor("[data-selected]", rowMarker)]: "inherit",
+    },
+  },
   /**
    * Phones: the signature as the list's last line — on the label's own box (`paddingBlock` a
    * touch inset), so it stands below Archive exactly where the Work label stands below the
@@ -266,6 +279,7 @@ const styles = stylex.create({
     justifySelf: { default: null, [media.mobile]: "end" },
     color: {
       default: colors.tertiary,
+      [stylex.when.ancestor(":hover", listMarker)]: colors.quaternary,
       [stylex.when.ancestor(":hover", rowMarker)]: { [media.hover]: colors.primary },
       [stylex.when.ancestor(":focus-visible", rowMarker)]: colors.primary,
       [stylex.when.ancestor("[data-selected]", rowMarker)]: colors.primary,
