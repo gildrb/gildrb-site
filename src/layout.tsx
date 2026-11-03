@@ -259,7 +259,7 @@ export function Main({ home = false, children }: { home?: boolean; children: Com
           `display: contents`; this marker can, and being out of flow it takes no grid cell. */}
       <span {...stylex.props(styles.skipTarget)} id="content" tabIndex={-1} />
       {children}
-      <p {...stylex.props(ui.label, styles.signatureMobile)}>
+      <p {...stylex.props(ui.label, styles.signatureMobile, home && styles.signatureHome)}>
         © {year} {person.name}
       </p>
     </main>
@@ -283,7 +283,10 @@ export function Name({ current }: { current?: string }) {
       >
         Gil Rodrigues
       </a>
-      {/* Phones: the bar carries the page on the right, beside the pinned name. */}
+      {/* Phones: the trail in the pinned bar — the name, the chevron (no state), the page. */}
+      <span {...stylex.props(styles.crumb)} aria-hidden="true">
+        &gt;
+      </span>
       <span {...stylex.props(styles.mobilePage)}>{current}</span>
     </p>
   ) : (
@@ -565,8 +568,6 @@ const styles = stylex.create({
     display: "flex",
     flexDirection: { default: "column", [media.mobile]: "row" },
     alignItems: { default: "start", [media.mobile]: "baseline" },
-    justifyContent: { default: null, [media.mobile]: "space-between" },
-    width: { default: null, [media.mobile]: "100%" },
     whiteSpace: "nowrap",
     minHeight: {
       default: null,
@@ -577,7 +578,13 @@ const styles = stylex.create({
     // Contact stays on the row it had when the name carried a page under it.
     paddingBottom: { default: null, [media.desktop]: space.linkGap },
   },
-  /** Phones: the page's name in the pinned bar, right (`Name`). */
+  /** Phones: the trail's chevron — no state, as the grey name it follows. */
+  crumb: {
+    display: { default: "none", [media.mobile]: "inline" },
+    color: colors.tertiary,
+    paddingInline: space.unit,
+  },
+  /** Phones: the page's name in the pinned trail, after the chevron (`Name`). */
   mobilePage: {
     display: { default: "none", [media.mobile]: "block" },
     color: colors.primary,
@@ -595,6 +602,10 @@ const styles = stylex.create({
     order: { default: null, [media.mobile]: 6 },
     margin: 0,
     paddingTop: space.sectionGap,
+  },
+  /** Phones: the homepage's signature on its own row, under the table (`homeLayout`). */
+  signatureHome: {
+    gridRow: { default: null, [media.mobile]: 5 },
   },
   /**
    * The parent: the same name, in the same type and place as on the homepage, so only its color
