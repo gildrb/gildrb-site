@@ -216,7 +216,7 @@ const styles = stylex.create({
     gridColumn: "1 / -1",
     margin: 0,
     paddingBlock: { default: space.touchInset, [media.desktop]: `0 ${space.portfolioRowPadding}` },
-    color: colors.tertiary,
+    color: colors.quaternary,
     fontWeight: "inherit",
     boxShadow: `inset 0 -1px ${colors.hairline}`,
   },
