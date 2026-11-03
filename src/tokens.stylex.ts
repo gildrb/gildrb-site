@@ -192,7 +192,7 @@ export const colors = stylex.defineVars({
   quaternary: { default: "oklch(56% 0.05 60)", [light]: "oklch(35% 0.026 54)" },
   /** Dates, descriptors, quiet links at rest. */
   tertiary: { default: "oklch(67% 0.042 64)", [light]: "oklch(50% 0.036 58)" },
-  article: { default: "oklch(88% 0.024 80)", [light]: "oklch(30% 0.022 52)" },
+  article: { default: "oklch(95% 0.02 85)", [light]: "oklch(21% 0.018 50)" },
   /** Rules: the page's text at 12% opacity, so they take the tint of whatever is under them. */
   hairline: { default: "oklch(95% 0.02 85 / 0.12)", [light]: "oklch(21% 0.018 50 / 0.12)" },
   codeBg: { default: "oklch(21% 0.016 58)", [light]: "oklch(95% 0.018 82)" },
