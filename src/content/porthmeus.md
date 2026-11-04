@@ -17,8 +17,7 @@ The dev server listens on `localhost` of the server, so your laptop and phone ca
 Put `porthmeus` before your dev command, or its short form `p`:
 
 ```sh
-porthmeus vp dev
-p vp dev
+porthmeus vp dev # or the short form: p vp dev
 ```
 
 Porthmeus finds the port and gives it a private HTTPS link on your tailnet, through Tailscale Serve. Hot reload works, and Vite needs no configuration. The link goes away when the command stops. `porthmeus dashboard` shows all your dev servers.

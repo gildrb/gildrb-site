@@ -27,14 +27,27 @@ export function Command({ commands }: { commands: readonly string[] }) {
   return (
     <div {...stylex.props(ui.codeSurface, styles.block)}>
       <code {...stylex.props(ui.mono, styles.lines)}>
-        {commands.map((command) => (
-          <span key={command} {...stylex.props(styles.line)}>
-            <span {...stylex.props(styles.prompt)} aria-hidden="true">
-              $
+        {commands.map((command) => {
+          // A trailing ` #` comment (`porthmeus vp dev # or the short form: p vp dev`) is prose,
+          // not command: it renders in the quiet rung, unspoken and unselected. Copying keeps it
+          // whole — the shell takes a comment line as a comment.
+          const comment = command.includes(" #") ? command.slice(command.indexOf("#")) : null;
+          return (
+            <span key={command} {...stylex.props(styles.line)}>
+              <span {...stylex.props(styles.prompt)} aria-hidden="true">
+                $
+              </span>
+              <span {...stylex.props(styles.command)}>
+                {comment === null ? command : command.slice(0, command.indexOf("#"))}
+              </span>
+              {comment !== null && (
+                <span {...stylex.props(styles.comment)} aria-hidden="true">
+                  {comment}
+                </span>
+              )}
             </span>
-            <span {...stylex.props(styles.command)}>{command}</span>
-          </span>
-        ))}
+          );
+        })}
       </code>
       <button
         {...stylex.props(
@@ -100,6 +113,7 @@ const styles = stylex.create({
   },
   prompt: { color: colors.tertiary, userSelect: "none" },
   command: { whiteSpace: "pre" },
+  comment: { color: colors.tertiary, whiteSpace: "pre", userSelect: "none" },
   /**
    * A transparent icon, no box: the panel is quiet, so primary contrast reads as pressable.
    * The lines fade out before it (`fade.end`), so no command runs beneath it.
