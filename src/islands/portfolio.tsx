@@ -82,25 +82,23 @@ export function Portfolio({ more }: { more: number }) {
                   <Row key={project.href} project={project} first={row === 0} home />
                 ))}
               {group === "Work" && (
-                <>
-                  <a {...stylex.props(rowMarker, ui.respond, styles.archive)} href="/all">
-                    <span {...stylex.props(ui.text, ui.emphasis, ui.respond, styles.title)}>
-                      Archive
-                    </span>
-                    <span {...stylex.props(ui.text, ui.respond, styles.more)}>
-                      <Figures text={String(more)} /> more
-                    </span>
-                  </a>
-                  {/* Phones: the signature as the list's last line, on the label rhythm
-                      (`laterLabel`): one pitch below Archive. */}
-                  <p {...stylex.props(ui.label, styles.signature)}>
-                    © {year} {person.name}
-                  </p>
-                </>
+                <a {...stylex.props(rowMarker, ui.respond, styles.archive)} href="/all">
+                  <span {...stylex.props(ui.text, ui.emphasis, ui.respond, styles.title)}>
+                    Archive
+                  </span>
+                  <span {...stylex.props(ui.text, ui.respond, styles.more)}>
+                    <Figures text={String(more)} /> more
+                  </span>
+                </a>
               )}
             </div>
           ))}
         </div>
+        {/* Phones: the signature pinned below the scrolling list, on the label rhythm
+            (`laterLabel`): one pitch below Archive, always in view. */}
+        <p {...stylex.props(ui.label, styles.signature)}>
+          © {year} {person.name}
+        </p>
       </section>
     </div>
   );
@@ -179,7 +177,8 @@ const styles = stylex.create({
         [media.mobile]: '""',
         [stylex.when.ancestor("[data-dense]", rootMarker)]: { [media.desktop]: '""' },
       },
-      bottom: 0,
+      // Phones: above the pinned signature (`signature`), so the fade hugs the list's last row.
+      bottom: { default: 0, [media.mobile]: space.touchTarget },
       backgroundImage: `linear-gradient(to top, ${colors.bg}, transparent)`,
       opacity: "var(--list-overflows, 0)",
       position: "absolute",
@@ -253,9 +252,9 @@ const styles = stylex.create({
     },
   },
   /**
-   * Phones: the signature as the list's last line — on the label's own box (`paddingBlock` a
-   * touch inset), so it stands below Archive exactly where the Work label stands below the
-   * Projects group. Desktop keeps the signature in the sidebar (`layout.tsx`).
+   * Phones: the signature pinned under the list (`section`'s last row), on the label's own box
+   * (`paddingBlock` a touch inset), so it stands below Archive one pitch, always in view.
+   * Desktop keeps the signature in the sidebar (`layout.tsx`).
    */
   signature: {
     display: { default: "none", [media.mobile]: "block" },
@@ -303,9 +302,9 @@ const styles = stylex.create({
       [media.desktop]: "contents",
       [stylex.when.ancestor("[data-dense]", rootMarker)]: { [media.desktop]: "grid" },
     },
-    // Phones: the list inside scrolls up and down when the screen is too short (`list`).
     gridTemplateColumns: { default: "subgrid", [media.mobile]: "minmax(0, 1fr)" },
-    gridTemplateRows: { default: null, [media.mobile]: "minmax(0, 1fr)" },
+    // Phones: the list scrolls (`list`), the signature stays under it (`signature`).
+    gridTemplateRows: { default: null, [media.mobile]: "minmax(0, 1fr) auto" },
     gridColumn: "1 / -1",
     gridRow: {
       default: null,
@@ -347,9 +346,9 @@ const styles = stylex.create({
     minHeight: { default: null, [media.mobile]: 0 },
     overflowY: { default: null, [media.mobile]: "auto" },
     overflowX: { default: null, [media.mobile]: "hidden" },
-    scrollbarWidth: "none",
-    // No overscroll lock: a pull past the list's top must chain to the page so the browser's
-    // pull to refresh stays available.
+    // Phones: the list keeps its bounce to itself, so the pull past its top never drags the
+    // page or the name bar with it; the pull to refresh stays on the page's own edges.
+    overscrollBehaviorY: { default: null, [media.mobile]: "contain" },
     scrollTimeline: { default: null, [media.mobile]: "--portfolio y" },
     paddingBottom: { default: null, [media.mobile]: space.portfolioRowPadding },
     "::-webkit-scrollbar": { display: "none" },

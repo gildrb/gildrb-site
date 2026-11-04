@@ -92,6 +92,7 @@ export function Home({
       title={title}
       head={<Head shareImage={assets.shareImage} />}
       mono={false}
+      home
     >
       <Shell home>
         <Sidebar home label={{ "aria-labelledby": "site-title" }}>
