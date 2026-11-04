@@ -241,13 +241,13 @@ const styles = stylex.create({
       default: "inherit",
       [media.hover]: { [stylex.when.ancestor(":hover", listMarker)]: colors.quaternary },
       [stylex.when.ancestor(":hover", rowMarker)]: {
-        [media.desktop]: { [media.hover]: "inherit" },
+        [media.hover]: { [stylex.when.ancestor(":hover", listMarker)]: "inherit" },
       },
       [stylex.when.ancestor(":focus-visible", rowMarker)]: {
-        [media.desktop]: { [media.hover]: "inherit" },
+        [media.hover]: { [stylex.when.ancestor(":hover", listMarker)]: "inherit" },
       },
       [stylex.when.ancestor("[data-selected]", rowMarker)]: {
-        [media.desktop]: { [media.hover]: "inherit" },
+        [media.hover]: { [stylex.when.ancestor(":hover", listMarker)]: "inherit" },
       },
     },
   },
@@ -286,13 +286,13 @@ const styles = stylex.create({
       default: colors.tertiary,
       [media.hover]: { [stylex.when.ancestor(":hover", listMarker)]: colors.quaternary },
       [stylex.when.ancestor(":hover", rowMarker)]: {
-        [media.desktop]: { [media.hover]: colors.primary },
+        [media.hover]: { [stylex.when.ancestor(":hover", listMarker)]: colors.primary },
       },
       [stylex.when.ancestor(":focus-visible", rowMarker)]: {
-        [media.desktop]: { [media.hover]: colors.primary },
+        [media.hover]: { [stylex.when.ancestor(":hover", listMarker)]: colors.primary },
       },
       [stylex.when.ancestor("[data-selected]", rowMarker)]: {
-        [media.desktop]: { [media.hover]: colors.primary },
+        [media.hover]: { [stylex.when.ancestor(":hover", listMarker)]: colors.primary },
       },
     },
   },
