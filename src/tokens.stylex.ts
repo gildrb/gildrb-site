@@ -192,8 +192,12 @@ export const colors = stylex.defineVars({
   quaternary: { default: "oklch(56% 0.05 60)", [light]: "oklch(35% 0.026 54)" },
   /** Dates, descriptors, quiet links at rest. */
   tertiary: { default: "oklch(67% 0.042 64)", [light]: "oklch(50% 0.036 58)" },
-  /** Rules: the page's text at 12% opacity, so they take the tint of whatever is under them. */
-  hairline: { default: "oklch(95% 0.02 85 / 0.12)", [light]: "oklch(21% 0.018 50 / 0.12)" },
+  /**
+   * Rules: the tertiary ink (bronze over the umber page, sepia on paper) at a low alpha —
+   * Vercel's approach: a faint, transparent line that keeps the palette's hue instead of
+   * graying out, and takes whatever it sits under.
+   */
+  hairline: { default: "oklch(67% 0.042 64 / 0.16)", [light]: "oklch(50% 0.036 58 / 0.18)" },
   codeBg: { default: "oklch(21% 0.016 58)", [light]: "oklch(95% 0.018 82)" },
   /**
    * Depth without shadows, from light (after raycast.com): a surface is lit from above. Its fill
