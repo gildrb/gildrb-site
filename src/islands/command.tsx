@@ -25,7 +25,7 @@ export function Command({ commands }: { commands: readonly string[] }) {
     timer.current = window.setTimeout(() => setState("idle"), 1200);
   }
   return (
-    <div {...stylex.props(ui.codeSurface, ui.edge, styles.block)}>
+    <div {...stylex.props(ui.codeSurface, styles.block)}>
       <code {...stylex.props(ui.mono, styles.lines)}>
         {commands.map((command) => (
           <span key={command} {...stylex.props(styles.line)}>
@@ -40,7 +40,6 @@ export function Command({ commands }: { commands: readonly string[] }) {
         {...stylex.props(
           ui.reset,
           ui.respond,
-          ui.key,
           ui.focusRing,
           styles.copy,
           state === "copied" && styles.done,
@@ -57,8 +56,8 @@ export function Command({ commands }: { commands: readonly string[] }) {
           </svg>
         ) : (
           <svg {...stylex.props(styles.icon)} viewBox="0 0 16 16" aria-hidden="true">
-            <rect x="5.5" y="5.5" width="8" height="8" rx="1.5" />
-            <path d="M10.5 3.5v-.5A1.5 1.5 0 0 0 9 1.5H4A1.5 1.5 0 0 0 2.5 3v5A1.5 1.5 0 0 0 4 9.5h.5" />
+            <rect x="5.75" y="1.75" width="8.5" height="8.5" rx="2" />
+            <rect x="1.75" y="5.75" width="8.5" height="8.5" rx="2" />
           </svg>
         )}
       </button>
@@ -66,29 +65,27 @@ export function Command({ commands }: { commands: readonly string[] }) {
   );
 }
 
-/**
- * A shell block on `ui.codeSurface` with `ui.edge`: the commands, and the copy button at the end
- * of the first line.
- * - The block spans the text column.
- * - The button is a 32px target (four units); the block pads half a unit around it, so a one-line
- *   block is 40px, the table's row pitch. The lines take the same half unit above and below, so
- *   they sit a unit in from the edge, with two units at the left, as a code block's do.
- * - Each command stays on one line. A command wider than the lines scrolls sideways and fades out
- *   before the button (`fade.end`). Copying gives one
- *   command per line.
- */
 const styles = stylex.create({
+  /**
+   * A shell block as a quiet panel (Vercel/eve): a fill one step off the page
+   * (`ui.codeSurface`), the hairline as a ring, and a two-layer shadow — one ambient, one
+   * direct — so the panel sits on the page instead of floating. The commands keep a two-unit
+   * inset from the panel's edge, and the copy button is a transparent icon: the lines fade out
+   * (`fade.end`) before it, so no command runs beneath it.
+   */
   block: {
     display: "grid",
     gridTemplateColumns: `minmax(0, 1fr) ${space.toggleSize}`,
     alignItems: "start",
     width: "100%",
-    padding: `calc(${space.unit} / 2)`,
-    paddingLeft: 0,
+    paddingBlock: `calc(${space.unit} / 2)`,
+    paddingRight: `calc(${space.unit} / 2)`,
+    boxShadow: `0 0 0 1px ${colors.hairline}, 0 1px 1px oklch(0% 0 0 / 0.02), 0 4px 8px -4px oklch(0% 0 0 / 0.05), 0 16px 24px -8px oklch(0% 0 0 / 0.06)`,
   },
   lines: {
     display: "grid",
     paddingBlock: `calc(${space.unit} / 2)`,
+    paddingLeft: `calc(2 * ${space.unit})`,
     overflowX: "auto",
     scrollbarWidth: "none",
     maskImage: fade.end,
@@ -96,22 +93,16 @@ const styles = stylex.create({
     fontSize: typeScale.monoSize,
     lineHeight: typeScale.monoLeading,
   },
-  /**
-   * The `$` and the space after it (one advance: `1ch` in a monospace font), then the command on
-   * one line. The two-unit left inset and the fade's width are padding inside the scrolling
-   * lines, so a scrolled command runs to the edge on the left and its end clears the fade.
-   */
   line: {
     display: "grid",
     gridTemplateColumns: "2ch max-content",
-    paddingLeft: `calc(2 * ${space.unit})`,
     paddingRight: space.tableGap,
   },
   prompt: { color: colors.tertiary, userSelect: "none" },
   command: { whiteSpace: "pre" },
   /**
-   * A 32px key (`ui.key`); hover and focus raise the icon to full contrast, as a quiet link
-   * (`ui.quiet`), and brighten the key.
+   * A transparent icon, no box: the panel is quiet, so primary contrast reads as pressable.
+   * The lines fade out before it (`fade.end`), so no command runs beneath it.
    */
   copy: {
     display: "flex",
@@ -119,7 +110,6 @@ const styles = stylex.create({
     justifyContent: "center",
     width: space.toggleSize,
     height: space.toggleSize,
-    borderRadius: `calc(${space.radius} / 2)`,
     color: {
       default: colors.tertiary,
       ":hover": { [media.hover]: colors.primary },
@@ -127,10 +117,10 @@ const styles = stylex.create({
     },
   },
   done: { color: colors.primary },
-  /** Two units: the label's 14px plus its own stroke's room, centred in the target. */
+  /** The label's 14px plus its own stroke's room, with a unit of air, centred in the target. */
   icon: {
-    width: `calc(2 * ${space.unit})`,
-    height: `calc(2 * ${space.unit})`,
+    width: `calc(9 * ${space.unit} / 4)`,
+    height: `calc(9 * ${space.unit} / 4)`,
     fill: "none",
     stroke: "currentColor",
     strokeWidth: 1.25,

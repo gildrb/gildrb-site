@@ -49,16 +49,12 @@ export const ui = stylex.create({
     outlineOffset: "-1px",
   },
   /**
-   * The code surface: inline code, code blocks, the shell block. The fill one step off the page
-   * (`colors.codeBg`), lit from above: it brightens toward the top (`colors.surfaceTop`) and a
-   * line of light (`colors.bevel`) runs along its top edge. The bevel is two pixels tall so its
-   * lower pixel shows under the edge's outline. The surface corner (`space.radius`); set with
-   * `edge`.
+   * The code surface: inline code, code blocks, the shell block. One quiet step off the page
+   * (`colors.codeBg`), no gloss: Vercel's panels are a fill and a line, not a lit box. The
+   * surface corner (`space.radius`); the border is the `edge` beside it.
    */
   codeSurface: {
     backgroundColor: colors.codeBg,
-    backgroundImage: `linear-gradient(${colors.surfaceTop}, ${colors.codeBg})`,
-    boxShadow: `inset 0 2px 0 ${colors.bevel}`,
     borderRadius: space.radius,
   },
   /**

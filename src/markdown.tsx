@@ -97,9 +97,7 @@ function Inline({ text }: { text: string }) {
     nodes.push(source.slice(last, match.index));
     last = match.index + whole.length;
     if (code)
-      nodes.push(
-        <code {...stylex.props(ui.mono, ui.codeSurface, ui.edge, styles.code)}>{code}</code>,
-      );
+      nodes.push(<code {...stylex.props(ui.mono, ui.codeSurface, styles.code)}>{code}</code>);
     else if (label) {
       const external = href.startsWith("http") && { rel: "noopener noreferrer" };
       nodes.push(
@@ -374,7 +372,7 @@ function Code({ language, title, code }: { language: string; title: string; code
   return (
     <>
       {label}
-      <pre {...stylex.props(ui.mono, ui.codeSurface, ui.edge, styles.pre)}>
+      <pre {...stylex.props(ui.mono, ui.edge, styles.pre)}>
         <code>
           {tokens.map(([kind, text]) =>
             text
