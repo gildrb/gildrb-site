@@ -1,5 +1,5 @@
 export const origin = "https://gildrb.com";
-export const email = "mail@gildrb.com";
+export const email = "g@gildrb.com";
 
 /**
  * Who this site is about. Keep it to facts that stay true: every page, feed and identity
